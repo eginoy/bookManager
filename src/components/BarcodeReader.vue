@@ -11,24 +11,6 @@
 <script>
 import Quagga from "../../node_modules/quagga/dist/quagga.js";
 
-// function calc(isbn) {
-//   const arrIsbn = isbn
-//     .toString()
-//     .split("")
-//     .map(function(num) {
-//       parseInt(num);
-//     });
-//   let remainder = 0;
-//   const checkDigit = arrIsbn.pop();
-
-//   arrIsbn.forEach(function(num, index) {
-//     remainder += num * (index % 2 === 0 ? 1 : 3);
-//   });
-//   remainder %= 10;
-//   remainder = remainder === 0 ? 0 : 10 - remainder;
-
-//   return checkDigit === remainder;
-// }
 export default {
   data() {
     return {
@@ -76,17 +58,42 @@ export default {
         }
       );
       this.isScan = true;
+    },
+    getEanCode: function() {
+      const self = this;
+      Quagga.onDetected(function(success) {
+        const readCode = success.codeResult.code;
+        if (readCode === undefined) return;
+        if (self.checkDigit(readCode)) {
+          self.code = readCode;
+          Quagga.stop();
+          self.isScan = false;
+        }
+        {
+          self.getEanCode();
+        }
+      });
+    },
+    checkDigit: function(isbn) {
+      const arrIsbn = isbn
+        .toString()
+        .split("")
+        .map(num => parseInt(num));
+      let remainder = 0;
+      const checkDigit = arrIsbn.pop();
+
+      arrIsbn.forEach((num, index) => {
+        remainder += num * (index % 2 === 0 ? 1 : 3);
+      });
+      remainder %= 10;
+      remainder = remainder === 0 ? 0 : 10 - remainder;
+
+      return checkDigit === remainder;
     }
   },
   updated() {
     this.$nextTick(function() {
-      const self = this;
-      Quagga.onDetected(function(success) {
-        const readCode = success.codeResult.code;
-        Quagga.stop();
-        self.isScan = false;
-        return (self.code = readCode);
-      });
+      this.getEanCode();
     });
   }
 };
