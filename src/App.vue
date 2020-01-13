@@ -2,6 +2,7 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png" />
     <HelloWorld msg="Welcome to Your Vue.js App" />
+    <getBookInfo></getBookInfo>
     <BarcodeReader></BarcodeReader>
   </div>
 </template>
@@ -9,12 +10,14 @@
 <script>
 import HelloWorld from "./components/HelloWorld.vue";
 import BarcodeReader from "./components/BarcodeReader";
+import getBookInfo from "./components/getBookInfo";
 
 export default {
   name: "app",
   components: {
     HelloWorld,
-    BarcodeReader
+    BarcodeReader,
+    getBookInfo
   }
 };
 </script>

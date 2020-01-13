@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import Quagga from "../../node_modules/quagga/dist/quagga.js";
+import Quagga from "quagga";
 
 export default {
   data() {
