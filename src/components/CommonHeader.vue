@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-right">
-    <div class=" p-appIcon fas fa-book"></div>
+    <div class=" p-appIcon"></div>
     <div class="p-navbar-links">
       <a class="p-link" href="#">Scan</a>
       <a class="p-link" href="#">登録済書籍</a>
@@ -14,6 +14,7 @@
 .navbar {
   background-color: #007bbf;
   height: 3em;
+  width: 100%;
 }
 
 .p-appIcon {
