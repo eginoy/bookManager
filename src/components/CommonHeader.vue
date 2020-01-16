@@ -1,79 +1,36 @@
 <template>
-  <!--Navbar-->
-  <nav class="navbar navbar-light navbar-1 white">
-    <!-- Navbar brand -->
-    <a class="navbar-brand" href="#">Navbar</a>
-
-    <!-- Collapse button -->
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-toggle="collapse"
-      data-target="#navbarSupportedContent15"
-      aria-controls="navbarSupportedContent15"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent15">
-      <!-- Links -->
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="#"
-            >Home <span class="sr-only">(current)</span></a
-          >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Features</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Pricing</a>
-        </li>
-      </ul>
-      <!-- Links -->
+  <nav class="navbar navbar-right">
+    <div class=" p-appIcon"></div>
+    <div class="p-navbar-links">
+      <a class="p-link" href="#">Scan</a>
+      <a class="p-link" href="#">登録済書籍</a>
     </div>
-    <!-- Collapsible content -->
   </nav>
-  <!--/.Navbar-->
 </template>
 
-<script>
-export default {};
-</script>
+<script></script>
 
 <style scoped>
-.p-main {
-  color: #007bbf;
+.navbar {
+  background-color: #007bbf;
+  height: 3em;
+  width: 100%;
 }
 
-.navbar.navbar-1 .navbar-toggler-icon {
-  background-image: url("https://mdbootstrap.com/img/svg/hamburger6.svg?color=000");
+.p-appIcon {
+  display: flex;
+  justify-content: flex-start;
 }
-.navbar.navbar-2 .navbar-toggler-icon {
-  background-image: url("https://mdbootstrap.com/img/svg/hamburger2.svg?color=fff");
+
+.p-navbar-links {
+  display: flex;
+  justify-content: flex-end;
 }
-.navbar.navbar-3 .navbar-toggler-icon {
-  background-image: url("https://mdbootstrap.com/img/svg/hamburger1.svg?color=6a1b9a");
-}
-.navbar.navbar-4 .navbar-toggler-icon {
-  background-image: url("https://mdbootstrap.com/img/svg/hamburger7.svg?color=BFE100");
-}
-.navbar.navbar-5 .navbar-toggler-icon {
-  background-image: url("https://mdbootstrap.com/img/svg/hamburger5.svg?color=f3e5f5");
-}
-.navbar.navbar-6 .navbar-toggler-icon {
-  background-image: url("https://mdbootstrap.com/img/svg/hamburger8.svg?color=E3005C");
-}
-.navbar.navbar-7 .navbar-toggler-icon {
-  background-image: url("https://mdbootstrap.com/img/svg/hamburger9.svg?color=FF2C00");
-}
-.navbar.navbar-8 .navbar-toggler-icon {
-  background-image: url("https://mdbootstrap.com/img/svg/hamburger4.svg?color=1729B0");
-}
-.navbar.navbar-9 .navbar-toggler-icon {
-  background-image: url("https://mdbootstrap.com/img/svg/hamburger3.svg?color=00FBD8");
+
+.p-link {
+  color: white;
+  text-decoration: none;
+  display: inline-block;
+  margin: 0.7em 0.7em;
 }
 </style>
