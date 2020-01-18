@@ -1,7 +1,5 @@
 <template>
   <div>
-    <input v-model="isbn" />
-    <input type="button" value="検索" v-on:click="getBookInfo" v-bind:disable="isbn === ''" />
     <div>{{ bookInfo }}</div>
   </div>
 </template>
@@ -17,9 +15,8 @@ export default {
     };
   },
   methods: {
-    getBookInfo: function() {
+    getBookInfo: function(isbn) {
       const self = this;
-      const isbn = 9784894517806;
       self.bookInfo = $.ajax({
         url: `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`,
         cache: false,
@@ -35,8 +32,9 @@ export default {
       );
     }
   },
-  mounted() {
-    this.getBookInfo();
+  created: function() {
+    // this.getBookInfo();
+    this.$eventHub.$on("success-scan", this.getBookInfo);
   }
 };
 </script>
