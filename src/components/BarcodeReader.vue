@@ -65,7 +65,7 @@ export default {
           self.code = readCode;
           Quagga.stop();
           self.isScan = false;
-          self.$emit("success-scan", self.code);
+          self.$eventHub.$emit("success-scan", self.code);
         }
         {
           self.getEanCode();
