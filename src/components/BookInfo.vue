@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div>{{ isSearchResultEmpty }}</div>
     <div>{{ bookInfo }}</div>
   </div>
 </template>
@@ -10,13 +11,15 @@ import $ from "jquery";
 export default {
   data() {
     return {
+      isbn: "",
       bookInfo: null,
-      isbn: ""
+      isSearchResultEmpty: true
     };
   },
   methods: {
     getBookInfo: function(isbn) {
       const self = this;
+      if (!(isbn.length === 13 || isbn.length === 10)) return;
       self.bookInfo = $.ajax({
         url: `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`,
         cache: false,
@@ -24,10 +27,15 @@ export default {
         datatype: "xml"
       }).then(
         function(result) {
+          if (result.totalItems === 0) {
+            self.isSearchResultEmpty = true;
+            return (self.bookInfo = "検索結果:0件");
+          }
+          self.isSearchResultEmpty = false;
           self.bookInfo = result;
         },
         function() {
-          alert("error");
+          return "error";
         }
       );
     }
