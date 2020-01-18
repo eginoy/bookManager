@@ -31,7 +31,6 @@ export default {
 }
 
 /* under reset styles */
-
 /* Box sizing rules */
 *,
 *::before,

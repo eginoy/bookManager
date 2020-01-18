@@ -1,9 +1,13 @@
 <template>
-  <nav class="navbar navbar-right">
-    <div class=" p-appIcon"></div>
+  <nav class="navbar">
     <div class="p-navbar-links">
-      <a class="p-link" href="#">Scan</a>
-      <a class="p-link" href="#">登録済書籍</a>
+      <div class=".p-navbar-links-left">
+        <v-fa class="p-bookIcon" icon="book" />
+      </div>
+      <div class="p-navbar-links-right">
+        <a class="p-link" href="#">Scan</a>
+        <a class="p-link" href="#">書籍一覧</a>
+      </div>
     </div>
   </nav>
 </template>
@@ -17,20 +21,27 @@
   width: 100%;
 }
 
-.p-appIcon {
-  display: flex;
-  justify-content: flex-start;
-}
-
 .p-navbar-links {
   display: flex;
-  justify-content: flex-end;
+}
+
+.p-navbar-links-left {
+  margin-right: auto;
+}
+
+.p-navbar-links-right {
+  margin-left: auto;
+}
+
+.p-bookIcon {
+  font-size: 2em;
+  margin: 0.2em 0.5em;
 }
 
 .p-link {
-  color: white;
+  color: black;
   text-decoration: none;
   display: inline-block;
-  margin: 0.7em 0.7em;
+  margin: 0.7em 1em;
 }
 </style>
