@@ -18,9 +18,6 @@ export default {
       isScan: false
     };
   },
-  mounted() {
-    //dom生成されたあとにQuaggaの初期化する。 (描写位置のエレメントをQuagga初期化時に使用するため)
-  },
   methods: {
     startScan: function() {
       Quagga.init(
@@ -68,6 +65,7 @@ export default {
           self.code = readCode;
           Quagga.stop();
           self.isScan = false;
+          self.$emit("success-scan", self.code);
         }
         {
           self.getEanCode();
