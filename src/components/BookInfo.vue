@@ -1,23 +1,36 @@
 <template>
   <div>
-    <div class="p-bookInfo" v-if="!isSearchResultEmpty">
-      <div>
-        <img v-bind:src="bookImage" />
-      </div>
-      <div class="p-bookInfo-detail">
-        <div class="p-bookInfo-detail-title">{{ bookTitle }}</div>
-        <a class="p-bookInfo-detail-link" v-bind:href="bookLink"
-          >Amazonで検索</a
-        >
+    <div v-if="!isSearchResultEmpty">
+      <div class="p-bookInfo">
+        <div>
+          <img v-bind:src="bookImage" />
+        </div>
+        <div class="p-bookInfo-detail">
+          <div class="p-bookInfo-detail-title">書籍名: {{ bookTitle }}</div>
+          <a
+            class="p-bookInfo-detail-link"
+            v-bind:href="bookLink"
+            target="_blank"
+            >Amazonで検索</a
+          >
+        </div>
       </div>
       <button
-        class="btn btn-primary"
-        value="登録"
+        v-if="!isDuplicateBook"
+        class="p-bookInfo-registerButton btn btn-primary"
         v-on:click="registerBookInfo"
-      />
+      >
+        登録
+      </button>
+      <div v-else>
+        登録済みの書籍です。
+      </div>
     </div>
     <div v-else>
-      <div>{{ bookInfo }}</div>
+      <div><span>検索結果:0件</span></div>
+    </div>
+    <div>
+      {{ books }}
     </div>
   </div>
 </template>
@@ -32,7 +45,10 @@ export default {
       isbn: "",
       bookInfo: [],
       isSearchResultEmpty: true,
-      items: "",
+      isDuplicateBook: false,
+      duplicateCount: 0,
+      books: [],
+      bookKeys: [],
       bookTitle: "",
       bookImage: "",
       bookLink: "",
@@ -44,7 +60,7 @@ export default {
     getBookInfo: function(isbn) {
       const self = this;
       if (!(isbn.length === 13 || isbn.length === 10)) return;
-      self.bookInfo = $.ajax({
+      $.ajax({
         url: `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`,
         cache: false,
         type: "get",
@@ -52,8 +68,7 @@ export default {
       }).then(
         function(result) {
           if (result.totalItems === 0) {
-            self.isSearchResultEmpty = true;
-            return (self.bookInfo = "検索結果:0件");
+            return (self.isSearchResultEmpty = true);
           }
           self.isSearchResultEmpty = false;
           self.setBookInfo(result);
@@ -65,59 +80,55 @@ export default {
     },
     setBookInfo: function(result) {
       const self = this;
-      self.items = result.items[0].volumeInfo;
-      self.bookTitle = self.items.title;
-      self.bookImage = self.items.imageLinks.smallThumbnail;
-      self.bookIsbnCode10 = self.items.industryIdentifiers[0].identifier;
-      self.bookIsbnCode13 = self.items.industryIdentifiers[1].identifier;
+      var items = result.items[0].volumeInfo;
+      self.bookTitle = items.title;
+      self.bookImage = items.imageLinks.smallThumbnail;
+      self.bookIsbnCode10 = items.industryIdentifiers[0].identifier;
+      self.bookIsbnCode13 = items.industryIdentifiers[1].identifier;
       self.bookLink = `https://www.amazon.co.jp/s?k=${self.bookIsbnCode10}&__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&ref=nb_sb_noss`;
+      self.checkDuplicateBook(self.bookIsbnCode10, self.bookIsbnCode13);
     },
     registerBookInfo: function() {
       const self = this;
       var db = firebase.database();
-      var ref = db.ref("server/saving-data");
-      var booksRef = ref.child("books");
+      var ref = db.ref("server/saving-data/books");
+      // var booksRef = ref.child("books");
 
-      booksRef.push({
+      ref.push({
         bookTitle: self.bookTitle,
         bookImage: self.bookImage,
         bookIsbnCode10: self.bookIsbnCode10,
         bookIsbnCode13: self.bookIsbnCode13,
         bookLink: self.bookLink
       });
+    },
+    checkDuplicateBook: function(scanedIsbn10, scanedIsbn13) {
+      const self = this;
+      var books = JSON.parse(JSON.stringify(self.books));
+      self.duplicateCount = 0;
+      books.forEach(function(book) {
+        var isbn10 = book.bookIsbnCode10;
+        var isbn13 = book.bookIsbnCode13;
 
-      // var usersRef = ref.child("users");
-      // usersRef.set({
-      //   alanisawesome: {
-      //     date_of_birth: "June 23, 1912",
-      //     full_name: "Alan Turing"
-      //   },
-      //   gracehop: {
-      //     date_of_birth: "December 9, 1906",
-      //     full_name: "Grace Hopper"
-      //   }
-      // });
-      //   firebase
-      //     .database()
-      //     .ref("bookInfo")
-      //     .push(
-      //       {
-      //         bookTitle: self.bookTitle,
-      //         bookImage: self.bookImage,
-      //         bookIsbnCode10: self.bookIsbnCode10,
-      //         bookIsbnCode13: self.bookIsbnCode13,
-      //         bookLink: self.bookLink
-      //       },
-      //       function() {
-      //         alert("登録しました");
-      //       }
-      //     );
-      // }
+        if (scanedIsbn10 === isbn10 || scanedIsbn13 === isbn13)
+          self.duplicateCount++;
+      });
+      self.duplicateCount === 0
+        ? (self.isDuplicateBook = false)
+        : (self.isDuplicateBook = true);
     }
   },
   created: function() {
-    // this.getBookInfo();
+    const self = this;
     this.$eventHub.$on("success-scan", this.getBookInfo);
+    var db = firebase.database();
+    var ref = db.ref("server/saving-data/books");
+    ref.on("value", function(snapshot) {
+      self.books = snapshot.val();
+      Object.keys(snapshot.val()).forEach(function(key) {
+        self.bookKeys.push(key);
+      });
+    });
   }
 };
 </script>
@@ -127,6 +138,9 @@ export default {
   display: flex;
   justify-content: center;
   margin: 1em 0;
+}
+
+.p-bookInfo-registerButton {
 }
 
 .p-bookInfo-detail {
