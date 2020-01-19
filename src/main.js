@@ -2,21 +2,15 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import App from "./App.vue";
 
-import {
-  library
-} from "@fortawesome/fontawesome-svg-core";
-import {
-  fas
-} from "@fortawesome/free-solid-svg-icons";
-import {
-  far
-} from "@fortawesome/free-regular-svg-icons";
-import {
-  fab
-} from "@fortawesome/free-brands-svg-icons";
-import {
-  FontAwesomeIcon
-} from "@fortawesome/vue-fontawesome";
+import { BootstrapVue, IconPlugin } from "bootstrap-vue";
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-vue/dist/bootstrap-vue";
+
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { far } from "@fortawesome/free-regular-svg-icons";
+import { fab } from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 // アイコンを読み込み
 library.add(fas, far, fab);
@@ -27,7 +21,7 @@ Vue.component("v-fa", FontAwesomeIcon);
 // イベントハブの定義（非親子関係コンポーネント間）
 Vue.prototype.$eventHub = new Vue();
 
-Vue.use(VueRouter);
+Vue.use(VueRouter, BootstrapVue, IconPlugin);
 Vue.config.productionTip = false;
 
 new Vue({

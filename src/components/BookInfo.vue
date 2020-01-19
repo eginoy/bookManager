@@ -1,13 +1,14 @@
 <template>
   <div>
     <div class="p-bookInfo" v-if="!isSearchResultEmpty">
-      <div><img v-bind:src="bookImage" /></div>
+      <div>
+        <img v-bind:src="bookImage" />
+      </div>
       <div class="p-bookInfo-detail">
         <div class="p-bookInfo-detail-title">{{ bookTitle }}</div>
-        <a class="p-bookInfo-detail-link" v-bind:href="bookLink"
-          >Amazonで検索</a
-        >
+        <a class="p-bookInfo-detail-link" v-bind:href="bookLink">Amazonで検索</a>
       </div>
+      <button class="btn btn-primary" value="登録" />
     </div>
     <div v-else>
       <div>{{ bookInfo }}</div>

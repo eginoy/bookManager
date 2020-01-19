@@ -1,7 +1,7 @@
 <template>
-  <nav class="navbar">
+  <nav class="p-navbar">
     <div class="p-navbar-links">
-      <div class=".p-navbar-links-left">
+      <div class="p-navbar-links-left">
         <v-fa class="p-bookIcon" icon="book" />
       </div>
       <div class="p-navbar-links-right">
@@ -15,8 +15,8 @@
 <script></script>
 
 <style scoped>
-.navbar {
-  background-color: #007bbf;
+.p-navbar {
+  background-color: #007bff;
   height: 3em;
   width: 100%;
 }
@@ -36,10 +36,11 @@
 .p-bookIcon {
   font-size: 2em;
   margin: 0.2em 0.5em;
+  color: white;
 }
 
 .p-link {
-  color: black;
+  color: white;
   text-decoration: none;
   display: inline-block;
   margin: 0.7em 1em;

@@ -1,10 +1,13 @@
 <template>
   <div>
     <div>
-      scanCode:<span>{{ code }}</span>
+      scanCode:
+      <span>{{ code }}</span>
     </div>
-    <button v-on:click="startScan">scan start</button>
-    <div v-show="isScan" id="interactive" class="viewport"></div>
+    <button class="btn btn-primary" type="button" v-on:click="startScan">バーコードで検索</button>
+    <div class="overRay">
+      <div v-show="isScan" id="interactive" class="viewport"></div>
+    </div>
   </div>
 </template>
 
@@ -15,11 +18,13 @@ export default {
   data() {
     return {
       code: null,
-      isScan: false
+      isScan: false,
+      width: 0
     };
   },
   methods: {
     startScan: function() {
+      const self = this;
       Quagga.init(
         {
           inputStream: {
@@ -27,14 +32,16 @@ export default {
             type: "LiveStream",
             target: document.querySelector("#interactive"), //埋め込んだdivのID
             constraints: {
-              facingMode: "environment"
+              facingMode: "environment",
+              width: self.width * 0.9,
+              height: 480
             },
             area: {
               //必要ならバーコードの読み取り範囲を調整できる（この場合は、上30%/下30%は読み取りしない）
-              top: "30%",
+              top: "0%",
               right: "0%",
               left: "0%",
-              bottom: "30%"
+              bottom: "50%"
             }
           },
           locator: {
@@ -93,8 +100,16 @@ export default {
     this.$nextTick(function() {
       this.getEanCode();
     });
+  },
+  created() {
+    this.width = document.documentElement.clientWidth;
   }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+video {
+  display: flex;
+  justify-content: center;
+}
+</style>
