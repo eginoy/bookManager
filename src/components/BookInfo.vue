@@ -100,6 +100,7 @@ export default {
         bookIsbnCode13: self.bookIsbnCode13,
         bookLink: self.bookLink
       });
+      self.duplicateCount = 0;
     },
     checkDuplicateBook: function(scanedIsbn10, scanedIsbn13) {
       const self = this;
@@ -110,13 +111,10 @@ export default {
       ref.on("value", function(snapshot) {
         keys = Object.keys(snapshot.val());
         books = snapshot.val();
-      });
-
-      self.duplicateCount = 0;
-
-      keys.forEach(key => {
-        if (books[key].bookIsbnCode10 === scanedIsbn10) self.duplicateCount++;
-        if (books[key].bookIsbnCode13 === scanedIsbn13) self.duplicateCount++;
+        keys.forEach(key => {
+          if (books[key].bookIsbnCode10 === scanedIsbn10) self.duplicateCount++;
+          if (books[key].bookIsbnCode13 === scanedIsbn13) self.duplicateCount++;
+        });
       });
     }
   },
@@ -126,7 +124,7 @@ export default {
   watch: {
     duplicateCount: function(val) {
       if (val === 0) return (this.isDuplicateBook = true);
-      this.duplicateCount = false;
+      this.isDuplicateBook = false;
     }
   }
 };
