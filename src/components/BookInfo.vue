@@ -92,7 +92,6 @@ export default {
       const self = this;
       var db = firebase.database();
       var ref = db.ref("server/saving-data/books");
-      // var booksRef = ref.child("books");
 
       ref.push({
         bookTitle: self.bookTitle,
@@ -104,31 +103,31 @@ export default {
     },
     checkDuplicateBook: function(scanedIsbn10, scanedIsbn13) {
       const self = this;
-      var books = JSON.parse(JSON.stringify(self.books));
-      self.duplicateCount = 0;
-      books.forEach(function(book) {
-        var isbn10 = book.bookIsbnCode10;
-        var isbn13 = book.bookIsbnCode13;
-
-        if (scanedIsbn10 === isbn10 || scanedIsbn13 === isbn13)
-          self.duplicateCount++;
+      var keys = [];
+      var books;
+      var db = firebase.database();
+      var ref = db.ref("server/saving-data/books");
+      ref.on("value", function(snapshot) {
+        keys = Object.keys(snapshot.val());
+        books = snapshot.val();
       });
-      self.duplicateCount === 0
-        ? (self.isDuplicateBook = false)
-        : (self.isDuplicateBook = true);
+
+      self.duplicateCount = 0;
+
+      keys.forEach(key => {
+        if (books[key].bookIsbnCode10 === scanedIsbn10) self.duplicateCount++;
+        if (books[key].bookIsbnCode13 === scanedIsbn13) self.duplicateCount++;
+      });
     }
   },
   created: function() {
-    const self = this;
     this.$eventHub.$on("success-scan", this.getBookInfo);
-    var db = firebase.database();
-    var ref = db.ref("server/saving-data/books");
-    ref.on("value", function(snapshot) {
-      self.books = snapshot.val();
-      Object.keys(snapshot.val()).forEach(function(key) {
-        self.bookKeys.push(key);
-      });
-    });
+  },
+  watch: {
+    duplicateCount: function(val) {
+      if (val === 0) return (this.isDuplicateBook = true);
+      this.duplicateCount = false;
+    }
   }
 };
 </script>

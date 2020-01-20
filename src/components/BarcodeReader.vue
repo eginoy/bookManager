@@ -4,7 +4,12 @@
       scanCode:
       <span>{{ code }}</span>
     </div>
-    <button class="btn btn-primary" type="button" v-on:click="startScan">バーコードで検索</button>
+    <button class="btn btn-primary" type="button" v-on:click="startScan">
+      バーコードで検索
+    </button>
+    <input v-model="code" type="text" />
+    <input v-on:click="search" value="検索" type="button" />
+
     <div class="overRay">
       <div v-show="isScan" id="interactive" class="viewport"></div>
     </div>
@@ -94,6 +99,9 @@ export default {
       remainder = remainder === 0 ? 0 : 10 - remainder;
 
       return checkDigit === remainder;
+    },
+    search: function() {
+      this.$eventHub.$emit("success-scan", this.code);
     }
   },
   updated() {
