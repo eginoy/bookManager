@@ -7,31 +7,22 @@
         </div>
         <div class="p-bookInfo-detail">
           <div class="p-bookInfo-detail-title">書籍名: {{ bookTitle }}</div>
-          <a
-            class="p-bookInfo-detail-link"
-            v-bind:href="bookLink"
-            target="_blank"
-            >Amazonで検索</a
-          >
+          <a class="p-bookInfo-detail-link" v-bind:href="bookLink" target="_blank">Amazonで検索</a>
         </div>
       </div>
       <button
         v-if="!isDuplicateBook"
         class="p-bookInfo-registerButton btn btn-primary"
         v-on:click="registerBookInfo"
-      >
-        登録
-      </button>
-      <div v-else>
-        登録済みの書籍です。
-      </div>
+      >登録</button>
+      <div v-else>登録済みの書籍です。</div>
     </div>
     <div v-else>
-      <div><span>検索結果:0件</span></div>
+      <div>
+        <span>検索結果:0件</span>
+      </div>
     </div>
-    <div>
-      {{ books }}
-    </div>
+    <div>{{ books }}</div>
   </div>
 </template>
 
@@ -59,7 +50,8 @@ export default {
   methods: {
     getBookInfo: function(isbn) {
       const self = this;
-      if (!(isbn.length === 13 || isbn.length === 10)) return;
+      self.isDuplicateBook = false;
+      self.checkDuplicateBook(isbn);
       $.ajax({
         url: `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`,
         cache: false,
@@ -102,24 +94,38 @@ export default {
       });
       self.duplicateCount = 0;
     },
-    checkDuplicateBook: function(scanedIsbn10, scanedIsbn13) {
+    checkDuplicateBook: function(scanedIsbn) {
       const self = this;
-      var keys = [];
-      var books;
       var db = firebase.database();
       var ref = db.ref("server/saving-data/books");
-      ref.on("value", function(snapshot) {
-        keys = Object.keys(snapshot.val());
-        books = snapshot.val();
-        keys.forEach(key => {
-          if (books[key].bookIsbnCode10 === scanedIsbn10) self.duplicateCount++;
-          if (books[key].bookIsbnCode13 === scanedIsbn13) self.duplicateCount++;
+      ref
+        .orderByChild("bookIsbnCode10")
+        .startAt(scanedIsbn)
+        .endAt(scanedIsbn)
+        .once("value", function(snapshot) {
+          if (Object.keys(snapshot.val()).length !== 0)
+            self.isDuplicateBook = true;
         });
-      });
+
+      ref
+        .orderByChild("bookIsbnCode13")
+        .startAt(scanedIsbn)
+        .endAt(scanedIsbn)
+        .once("value", function(snapshot) {
+          if (Object.keys(snapshot.val()).length !== 0)
+            self.isDuplicateBook = true;
+        });
     }
   },
   created: function() {
+    const self = this;
     this.$eventHub.$on("success-scan", this.getBookInfo);
+
+    var db = firebase.database();
+    var ref = db.ref("server/saving-data/books");
+    ref.on("value", function(snapshot) {
+      self.books = snapshot.val();
+    });
   },
   watch: {
     duplicateCount: function(val) {
