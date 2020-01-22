@@ -7,28 +7,38 @@
         </div>
         <div class="p-bookInfo-detail">
           <div class="p-bookInfo-detail-title">書籍名: {{ bookTitle }}</div>
-          <a class="p-bookInfo-detail-link" v-bind:href="bookLink" target="_blank">Amazonで検索</a>
+          <a
+            class="p-bookInfo-detail-link"
+            v-bind:href="bookLink"
+            target="_blank"
+            >Amazonで検索</a
+          >
         </div>
       </div>
       <button
         v-if="!isDuplicateBook"
+        v-bind:disabled="isRegisterd"
         class="p-bookInfo-registerButton btn btn-primary"
         v-on:click="registerBookInfo"
-      >登録</button>
-      <div v-else>登録済みの書籍です。</div>
+      >
+        登録
+      </button>
+      <div v-else>
+        <span>登録済みの書籍です。</span>
+      </div>
     </div>
     <div v-else>
       <div>
         <span>検索結果:0件</span>
       </div>
     </div>
-    <div>{{ books }}</div>
   </div>
 </template>
 
 <script>
 import $ from "jquery";
 import firebase from "firebase";
+import moment from "moment";
 
 export default {
   data() {
@@ -37,8 +47,7 @@ export default {
       bookInfo: [],
       isSearchResultEmpty: true,
       isDuplicateBook: false,
-      duplicateCount: 0,
-      books: [],
+      isRegisterd: false,
       bookKeys: [],
       bookTitle: "",
       bookImage: "",
@@ -51,6 +60,7 @@ export default {
     getBookInfo: function(isbn) {
       const self = this;
       self.isDuplicateBook = false;
+      self.isRegisterd = false;
       self.checkDuplicateBook(isbn);
       $.ajax({
         url: `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`,
@@ -90,9 +100,10 @@ export default {
         bookImage: self.bookImage,
         bookIsbnCode10: self.bookIsbnCode10,
         bookIsbnCode13: self.bookIsbnCode13,
-        bookLink: self.bookLink
+        bookLink: self.bookLink,
+        insertDate: moment(new Date()).format("YYYY/MM/DD")
       });
-      self.duplicateCount = 0;
+      self.isRegisterd = true;
     },
     checkDuplicateBook: function(scanedIsbn) {
       const self = this;
@@ -118,20 +129,7 @@ export default {
     }
   },
   created: function() {
-    const self = this;
     this.$eventHub.$on("success-scan", this.getBookInfo);
-
-    var db = firebase.database();
-    var ref = db.ref("server/saving-data/books");
-    ref.on("value", function(snapshot) {
-      self.books = snapshot.val();
-    });
-  },
-  watch: {
-    duplicateCount: function(val) {
-      if (val === 0) return (this.isDuplicateBook = true);
-      this.isDuplicateBook = false;
-    }
   }
 };
 </script>
