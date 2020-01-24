@@ -1,18 +1,20 @@
-<template>
+<template id='bookInfo'>
   <div>
     <div v-if="!isSearchResultEmpty">
       <div class="p-bookInfo">
         <div>
-          <img v-bind:src="bookImage" />
+          <img v-bind:src="books[0].bookImage" />
         </div>
         <div class="p-bookInfo-detail">
-          <div class="p-bookInfo-detail-title">書籍名: {{ bookTitle }}</div>
-          <a
-            class="p-bookInfo-detail-link"
-            v-bind:href="bookLink"
-            target="_blank"
-            >Amazonで検索</a
-          >
+          <div class="p-bookInfo-detail-title">
+            書籍名:
+            <a
+              class="p-bookInfo-detail-link"
+              v-bind:href="books[0].bookLink"
+              target="_blank"
+            >{{ books[0].bookTitle }}</a>
+          </div>
+          <span>登録日:{{books[0].insertDate}}</span>
         </div>
       </div>
       <button
@@ -20,9 +22,7 @@
         v-bind:disabled="isRegisterd"
         class="p-bookInfo-registerButton btn btn-primary"
         v-on:click="registerBookInfo"
-      >
-        登録
-      </button>
+      >登録</button>
       <div v-else>
         <span>登録済みの書籍です。</span>
       </div>
@@ -41,10 +41,12 @@ import firebase from "firebase";
 import moment from "moment";
 
 export default {
+  name: "#bookInfo",
   data() {
     return {
       isbn: "",
       bookInfo: [],
+      books: [],
       isSearchResultEmpty: true,
       isDuplicateBook: false,
       isRegisterd: false,
@@ -83,12 +85,20 @@ export default {
     setBookInfo: function(result) {
       const self = this;
       var items = result.items[0].volumeInfo;
-      self.bookTitle = items.title;
-      self.bookImage = items.imageLinks.smallThumbnail;
-      self.bookIsbnCode10 = items.industryIdentifiers[0].identifier;
-      self.bookIsbnCode13 = items.industryIdentifiers[1].identifier;
-      self.bookLink = `https://www.amazon.co.jp/s?k=${self.bookIsbnCode10}&__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&ref=nb_sb_noss`;
-      self.checkDuplicateBook(self.bookIsbnCode10, self.bookIsbnCode13);
+
+      self.books.push({
+        bookTitle: items.title,
+        bookImage: items.imageLinks.smallThumbnail,
+        bookIsbnCode10: items.industryIdentifiers[0].identifier,
+        bookIsbnCode13: items.industryIdentifiers[1].identifier,
+        bookLink: items.infoLink,
+        insertDate: moment(new Date()).format("YYYY/MM/DD")
+      });
+
+      self.checkDuplicateBook(
+        self.books.bookIsbnCode10,
+        self.books.bookIsbnCode13
+      );
     },
     registerBookInfo: function() {
       const self = this;
@@ -114,6 +124,7 @@ export default {
         .startAt(scanedIsbn)
         .endAt(scanedIsbn)
         .once("value", function(snapshot) {
+          if (!snapshot.val()) return;
           if (Object.keys(snapshot.val()).length !== 0)
             self.isDuplicateBook = true;
         });
@@ -123,6 +134,7 @@ export default {
         .startAt(scanedIsbn)
         .endAt(scanedIsbn)
         .once("value", function(snapshot) {
+          if (!snapshot.val()) return;
           if (Object.keys(snapshot.val()).length !== 0)
             self.isDuplicateBook = true;
         });
