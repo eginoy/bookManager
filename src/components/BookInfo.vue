@@ -1,22 +1,7 @@
-<template id='bookInfo'>
+<template>
   <div>
-    <div v-if="!isSearchResultEmpty">
-      <div class="p-bookInfo">
-        <div>
-          <img v-bind:src="books[0].bookImage" />
-        </div>
-        <div class="p-bookInfo-detail">
-          <div class="p-bookInfo-detail-title">
-            書籍名:
-            <a
-              class="p-bookInfo-detail-link"
-              v-bind:href="books[0].bookLink"
-              target="_blank"
-            >{{ books[0].bookTitle }}</a>
-          </div>
-          <span>登録日:{{books[0].insertDate}}</span>
-        </div>
-      </div>
+    <div v-if="books.length">
+      <Books v-for="book in books" :book="book" :key="book.bookIsbnCode10"></Books>
       <button
         v-if="!isDuplicateBook"
         v-bind:disabled="isRegisterd"
@@ -40,8 +25,12 @@ import $ from "jquery";
 import firebase from "firebase";
 import moment from "moment";
 
+import Books from "./Books";
+
 export default {
-  name: "#bookInfo",
+  components: {
+    Books
+  },
   data() {
     return {
       isbn: "",
@@ -147,26 +136,4 @@ export default {
 </script>
 
 <style scoped>
-.p-bookInfo {
-  display: flex;
-  justify-content: center;
-  margin: 1em 0;
-}
-
-.p-bookInfo-registerButton {
-}
-
-.p-bookInfo-detail {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-left: 1em;
-}
-
-.p-bookInfo-detail-title {
-  margin-bottom: 1em;
-}
-.p-bookInfo-detail-link {
-  text-decoration: none;
-}
 </style>
