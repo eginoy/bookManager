@@ -8,7 +8,7 @@
       </div>
       <div class="p-navbar-links-right">
         <router-link class="p-link" to="/bookRegistration"
-          >書籍の登録</router-link
+          >書籍登録</router-link
         >
         <router-link class="p-link" to="/books">書籍一覧</router-link>
       </div>

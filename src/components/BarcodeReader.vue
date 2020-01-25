@@ -1,18 +1,18 @@
 <template>
   <div>
-    <div>
-      読み取りCode:
-      <span>{{ code }}</span>
-    </div>
-    <button class="btn btn-primary" type="button" v-on:click="startScan">
-      バーコードで検索
-    </button>
-    <!-- <input v-model="code" type="text" />
-    <input v-on:click="search" value="検索" type="button" /> -->
-
     <div class="overRay">
       <div v-show="isScan" id="interactive" class="viewport"></div>
     </div>
+
+    <button
+      v-if="!isScan"
+      class="p-scanButton btn btn-primary"
+      type="button"
+      v-on:click="startScan"
+    >バーコードで検索</button>
+
+    <!-- <input v-model="code" type="text" />
+    <input v-on:click="search" value="検索" type="button" />-->
   </div>
 </template>
 
@@ -31,6 +31,7 @@ export default {
   methods: {
     startScan: function() {
       const self = this;
+      self.$eventHub.$emit("scan-start");
       Quagga.init(
         {
           inputStream: {
@@ -104,8 +105,8 @@ export default {
     },
     search: function() {
       //開発時用の検索イベント発行
-      this.isSearched = true;
-      this.$eventHub.$emit("success-scan", this.code, this.isSearched);
+      // this.isSearched = true;
+      // this.$eventHub.$emit("success-scan", this.code, this.isSearched);
     }
   },
   updated() {
@@ -123,5 +124,9 @@ export default {
 video {
   display: flex;
   justify-content: center;
+}
+
+.p-scanButton {
+  margin-top: 1em;
 }
 </style>

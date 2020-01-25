@@ -1,11 +1,7 @@
 <template>
   <div>
     <div v-if="books.length">
-      <Books
-        v-for="book in books"
-        :book="book"
-        :key="book.bookIsbnCode10"
-      ></Books>
+      <Books v-for="book in books" :book="book" :key="book.bookIsbnCode10"></Books>
       <button
         v-if="!isDuplicateBook"
         v-bind:disabled="isRegisterd"
@@ -45,7 +41,8 @@ export default {
       books: [],
       isDuplicateBook: false,
       isRegisterd: false,
-      isSearched: false
+      isSearched: false,
+      isScanNow: false
     };
   },
   methods: {
@@ -128,11 +125,16 @@ export default {
           if (Object.keys(snapshot.val()).length !== 0)
             self.isDuplicateBook = true;
         });
+    },
+    resetResult: function() {
+      this.books = [];
+      this.isSearched = false;
     }
   },
   created: function() {
     //バーコード読み込み時のスキャン完了イベントを待機するようセット
     this.$eventHub.$on("success-scan", this.getBookInfo);
+    this.$eventHub.$on("scan-start", this.resetResult);
   },
   computed: {
     buttonMessage: function() {
