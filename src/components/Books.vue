@@ -1,18 +1,20 @@
 <template>
   <div class="p-bookInfo">
     <div>
-      <img v-bind:src="book.bookImage" />
+      <img class="p-bookInfo-image" v-bind:src="book.bookImage" />
     </div>
     <div class="p-bookInfo-detail">
       <div class="p-bookInfo-detail-title">
-        書籍名:
         <a
           class="p-bookInfo-detail-link"
           v-bind:href="book.bookLink"
           target="_blank"
-        >{{ book.bookTitle }}</a>
+          >{{ book.bookTitle }}</a
+        >
       </div>
-      <span>登録日:{{book.insertDate}}</span>
+      <span class="p-bookInfo-detail-insertDate"
+        >登録日:<br />{{ book.insertDate }}</span
+      >
     </div>
   </div>
 </template>
@@ -28,16 +30,24 @@ export default {
 
 <style scoped>
 .p-bookInfo {
+  max-width: 300px;
   display: flex;
-  justify-content: center;
-  margin: 1em 0;
+  margin: 1em auto;
+  border: solid 1px #c0c0c0;
+  box-shadow: 0px 0px 10px;
+  border-radius: 0.5em;
+  padding: 1em;
+}
+
+.p-bookInfo-image {
 }
 
 .p-bookInfo-detail {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-left: 1em;
+  margin: 0 auto;
+  max-width: 9em;
 }
 
 .p-bookInfo-detail-title {
@@ -45,5 +55,8 @@ export default {
 }
 .p-bookInfo-detail-link {
   text-decoration: none;
+}
+
+.p-bookInfo-detail-insertDate {
 }
 </style>
