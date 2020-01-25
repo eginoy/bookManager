@@ -7,7 +7,9 @@
         v-bind:disabled="isRegisterd"
         class="p-bookInfo-registerButton btn btn-primary"
         v-on:click="registerBookInfo"
-      >登録</button>
+      >
+        <span>{{buttonMessage}}</span>
+      </button>
       <div v-else>
         <span>登録済みの書籍です。</span>
       </div>
@@ -33,19 +35,10 @@ export default {
   },
   data() {
     return {
-      isbn: "",
-      bookInfo: [],
       books: [],
-      isSearchResultEmpty: true,
       isDuplicateBook: false,
       isRegisterd: false,
-      isSearched: false,
-      bookKeys: [],
-      bookTitle: "",
-      bookImage: "",
-      bookLink: "",
-      bookIsbnCode10: "",
-      bookIsbnCode13: ""
+      isSearched: false
     };
   },
   methods: {
@@ -65,9 +58,7 @@ export default {
           if (result.totalItems === 0) {
             //書籍情報の初期化
             self.books = [];
-            self.isSearchResultEmpty = true;
           }
-          self.isSearchResultEmpty = false;
           self.setBookInfo(result);
         },
         function() {
@@ -77,8 +68,10 @@ export default {
     },
     setBookInfo: function(result) {
       const self = this;
+
       //書籍情報の初期化
       self.books = [];
+      if (result.totalItems === 0) return;
       var items = result.items[0].volumeInfo;
 
       self.books.push({
@@ -102,14 +95,6 @@ export default {
 
       ref.push(self.books[0]);
 
-      // ref.push({
-      //   bookTitle: self.bookTitle,
-      //   bookImage: self.bookImage,
-      //   bookIsbnCode10: self.bookIsbnCode10,
-      //   bookIsbnCode13: self.bookIsbnCode13,
-      //   bookLink: self.bookLink,
-      //   insertDate: moment(new Date()).format("YYYY/MM/DD")
-      // });
       self.isRegisterd = true;
     },
     checkDuplicateBook: function(scanedIsbn) {
@@ -138,7 +123,14 @@ export default {
     }
   },
   created: function() {
+    //バーコード読み込み時のスキャン完了イベントを待機するようセット
     this.$eventHub.$on("success-scan", this.getBookInfo);
+  },
+  computed: {
+    buttonMessage: function() {
+      if (this.isRegisterd) return "登録済み";
+      return "登録";
+    }
   }
 };
 </script>
