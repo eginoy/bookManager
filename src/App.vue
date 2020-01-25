@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <CommonHeader></CommonHeader>
+    <BooksList></BooksList>
     <BookRegister></BookRegister>
     <BarcodeReader></BarcodeReader>
   </div>
@@ -10,13 +11,15 @@
 import CommonHeader from "./components/CommonHeader";
 import BarcodeReader from "./components/BarcodeReader";
 import BookRegister from "./components/BookRegister";
+import BooksList from "./components/BooksList";
 
 export default {
   name: "app",
   components: {
     CommonHeader,
     BarcodeReader,
-    BookRegister
+    BookRegister,
+    BooksList
   }
 };
 </script>
