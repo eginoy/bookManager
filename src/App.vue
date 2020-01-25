@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <CommonHeader></CommonHeader>
-    <BookInfo></BookInfo>
+    <BookRegister></BookRegister>
     <BarcodeReader></BarcodeReader>
   </div>
 </template>
@@ -9,14 +9,14 @@
 <script>
 import CommonHeader from "./components/CommonHeader";
 import BarcodeReader from "./components/BarcodeReader";
-import BookInfo from "./components/BookInfo";
+import BookRegister from "./components/BookRegister";
 
 export default {
   name: "app",
   components: {
     CommonHeader,
     BarcodeReader,
-    BookInfo
+    BookRegister
   }
 };
 </script>

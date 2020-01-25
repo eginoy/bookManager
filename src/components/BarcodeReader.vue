@@ -4,9 +4,7 @@
       scanCode:
       <span>{{ code }}</span>
     </div>
-    <button class="btn btn-primary" type="button" v-on:click="startScan">
-      バーコードで検索
-    </button>
+    <button class="btn btn-primary" type="button" v-on:click="startScan">バーコードで検索</button>
     <input v-model="code" type="text" />
     <input v-on:click="search" value="検索" type="button" />
 
@@ -24,6 +22,7 @@ export default {
     return {
       code: null,
       isScan: false,
+      isSearched: false,
       width: 0
     };
   },
@@ -42,7 +41,7 @@ export default {
               height: 480
             },
             area: {
-              //必要ならバーコードの読み取り範囲を調整できる（この場合は、上30%/下30%は読み取りしない）
+              //必要ならバーコードの読み取り範囲を調整できる（下50%は読み取りしない）
               top: "0%",
               right: "0%",
               left: "0%",
@@ -55,7 +54,7 @@ export default {
           },
           numOfWorkers: 2,
           decoder: {
-            readers: ["ean_reader"] //ISBNは基本的にこれ（他にも種類あり）
+            readers: ["ean_reader"] //ISBN
           },
           locate: true
         },
@@ -77,7 +76,8 @@ export default {
           self.code = readCode;
           Quagga.stop();
           self.isScan = false;
-          self.$eventHub.$emit("success-scan", self.code);
+          self.isSearched = true;
+          self.$eventHub.$emit("success-scan", self.code, self.isSearched);
         }
         {
           self.getEanCode();
@@ -101,7 +101,9 @@ export default {
       return checkDigit === remainder;
     },
     search: function() {
-      this.$eventHub.$emit("success-scan", this.code);
+      //開発時用の検索イベント発行
+      this.isSearched = true;
+      this.$eventHub.$emit("success-scan", this.code, this.isSearched);
     }
   },
   updated() {

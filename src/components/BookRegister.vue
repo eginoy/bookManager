@@ -1,33 +1,20 @@
-<template id='bookInfo'>
+<template>
   <div>
-    <div v-if="!isSearchResultEmpty">
-      <div class="p-bookInfo">
-        <div>
-          <img v-bind:src="books[0].bookImage" />
-        </div>
-        <div class="p-bookInfo-detail">
-          <div class="p-bookInfo-detail-title">
-            書籍名:
-            <a
-              class="p-bookInfo-detail-link"
-              v-bind:href="books[0].bookLink"
-              target="_blank"
-            >{{ books[0].bookTitle }}</a>
-          </div>
-          <span>登録日:{{books[0].insertDate}}</span>
-        </div>
-      </div>
+    <div v-if="books.length">
+      <Books v-for="book in books" :book="book" :key="book.bookIsbnCode10"></Books>
       <button
         v-if="!isDuplicateBook"
         v-bind:disabled="isRegisterd"
         class="p-bookInfo-registerButton btn btn-primary"
         v-on:click="registerBookInfo"
-      >登録</button>
+      >
+        <span>{{buttonMessage}}</span>
+      </button>
       <div v-else>
         <span>登録済みの書籍です。</span>
       </div>
     </div>
-    <div v-else>
+    <div v-if="!books.length && isSearched">
       <div>
         <span>検索結果:0件</span>
       </div>
@@ -40,29 +27,26 @@ import $ from "jquery";
 import firebase from "firebase";
 import moment from "moment";
 
+import Books from "./Books";
+
 export default {
-  name: "#bookInfo",
+  components: {
+    Books
+  },
   data() {
     return {
-      isbn: "",
-      bookInfo: [],
       books: [],
-      isSearchResultEmpty: true,
       isDuplicateBook: false,
       isRegisterd: false,
-      bookKeys: [],
-      bookTitle: "",
-      bookImage: "",
-      bookLink: "",
-      bookIsbnCode10: "",
-      bookIsbnCode13: ""
+      isSearched: false
     };
   },
   methods: {
-    getBookInfo: function(isbn) {
+    getBookInfo: function(isbn, isSearched) {
       const self = this;
       self.isDuplicateBook = false;
       self.isRegisterd = false;
+      self.isSearched = isSearched;
       self.checkDuplicateBook(isbn);
       $.ajax({
         url: `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`,
@@ -72,9 +56,9 @@ export default {
       }).then(
         function(result) {
           if (result.totalItems === 0) {
-            return (self.isSearchResultEmpty = true);
+            //書籍情報の初期化
+            self.books = [];
           }
-          self.isSearchResultEmpty = false;
           self.setBookInfo(result);
         },
         function() {
@@ -84,6 +68,10 @@ export default {
     },
     setBookInfo: function(result) {
       const self = this;
+
+      //書籍情報の初期化
+      self.books = [];
+      if (result.totalItems === 0) return;
       var items = result.items[0].volumeInfo;
 
       self.books.push({
@@ -105,14 +93,8 @@ export default {
       var db = firebase.database();
       var ref = db.ref("server/saving-data/books");
 
-      ref.push({
-        bookTitle: self.bookTitle,
-        bookImage: self.bookImage,
-        bookIsbnCode10: self.bookIsbnCode10,
-        bookIsbnCode13: self.bookIsbnCode13,
-        bookLink: self.bookLink,
-        insertDate: moment(new Date()).format("YYYY/MM/DD")
-      });
+      ref.push(self.books[0]);
+
       self.isRegisterd = true;
     },
     checkDuplicateBook: function(scanedIsbn) {
@@ -141,32 +123,17 @@ export default {
     }
   },
   created: function() {
+    //バーコード読み込み時のスキャン完了イベントを待機するようセット
     this.$eventHub.$on("success-scan", this.getBookInfo);
+  },
+  computed: {
+    buttonMessage: function() {
+      if (this.isRegisterd) return "登録済み";
+      return "登録";
+    }
   }
 };
 </script>
 
 <style scoped>
-.p-bookInfo {
-  display: flex;
-  justify-content: center;
-  margin: 1em 0;
-}
-
-.p-bookInfo-registerButton {
-}
-
-.p-bookInfo-detail {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-left: 1em;
-}
-
-.p-bookInfo-detail-title {
-  margin-bottom: 1em;
-}
-.p-bookInfo-detail-link {
-  text-decoration: none;
-}
 </style>
