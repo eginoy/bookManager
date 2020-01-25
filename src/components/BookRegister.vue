@@ -12,7 +12,7 @@
         <span>登録済みの書籍です。</span>
       </div>
     </div>
-    <div v-else>
+    <div v-if="!books.length && isSearched">
       <div>
         <span>検索結果:0件</span>
       </div>
@@ -39,6 +39,7 @@ export default {
       isSearchResultEmpty: true,
       isDuplicateBook: false,
       isRegisterd: false,
+      isSearched: false,
       bookKeys: [],
       bookTitle: "",
       bookImage: "",
@@ -48,10 +49,11 @@ export default {
     };
   },
   methods: {
-    getBookInfo: function(isbn) {
+    getBookInfo: function(isbn, isSearched) {
       const self = this;
       self.isDuplicateBook = false;
       self.isRegisterd = false;
+      self.isSearched = isSearched;
       self.checkDuplicateBook(isbn);
       $.ajax({
         url: `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`,
@@ -61,7 +63,9 @@ export default {
       }).then(
         function(result) {
           if (result.totalItems === 0) {
-            return (self.isSearchResultEmpty = true);
+            //書籍情報の初期化
+            self.books = [];
+            self.isSearchResultEmpty = true;
           }
           self.isSearchResultEmpty = false;
           self.setBookInfo(result);
@@ -73,6 +77,8 @@ export default {
     },
     setBookInfo: function(result) {
       const self = this;
+      //書籍情報の初期化
+      self.books = [];
       var items = result.items[0].volumeInfo;
 
       self.books.push({
@@ -94,14 +100,16 @@ export default {
       var db = firebase.database();
       var ref = db.ref("server/saving-data/books");
 
-      ref.push({
-        bookTitle: self.bookTitle,
-        bookImage: self.bookImage,
-        bookIsbnCode10: self.bookIsbnCode10,
-        bookIsbnCode13: self.bookIsbnCode13,
-        bookLink: self.bookLink,
-        insertDate: moment(new Date()).format("YYYY/MM/DD")
-      });
+      ref.push(self.books[0]);
+
+      // ref.push({
+      //   bookTitle: self.bookTitle,
+      //   bookImage: self.bookImage,
+      //   bookIsbnCode10: self.bookIsbnCode10,
+      //   bookIsbnCode13: self.bookIsbnCode13,
+      //   bookLink: self.bookLink,
+      //   insertDate: moment(new Date()).format("YYYY/MM/DD")
+      // });
       self.isRegisterd = true;
     },
     checkDuplicateBook: function(scanedIsbn) {

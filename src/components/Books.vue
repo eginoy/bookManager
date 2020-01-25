@@ -33,9 +33,6 @@ export default {
   margin: 1em 0;
 }
 
-.p-bookInfo-registerButton {
-}
-
 .p-bookInfo-detail {
   display: flex;
   flex-direction: column;
