@@ -1,18 +1,31 @@
 import Vue from "vue";
-import VueRouter from "vue-router";
 import App from "./App.vue";
+import router from './router/index';
 
 import firebase from "firebase";
 
-import { BootstrapVue, IconPlugin } from "bootstrap-vue";
+import {
+  BootstrapVue,
+  IconPlugin
+} from "bootstrap-vue";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue";
 
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { fas } from "@fortawesome/free-solid-svg-icons";
-import { far } from "@fortawesome/free-regular-svg-icons";
-import { fab } from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import {
+  library
+} from "@fortawesome/fontawesome-svg-core";
+import {
+  fas
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  far
+} from "@fortawesome/free-regular-svg-icons";
+import {
+  fab
+} from "@fortawesome/free-brands-svg-icons";
+import {
+  FontAwesomeIcon
+} from "@fortawesome/vue-fontawesome";
 
 // アイコンを読み込み
 library.add(fas, far, fab);
@@ -23,7 +36,7 @@ Vue.component("v-fa", FontAwesomeIcon);
 // イベントハブの定義（非親子関係コンポーネント間）
 Vue.prototype.$eventHub = new Vue();
 
-Vue.use(VueRouter, BootstrapVue, IconPlugin);
+Vue.use(router, BootstrapVue, IconPlugin);
 Vue.config.productionTip = false;
 
 var firebaseConfig = {
@@ -41,5 +54,6 @@ firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 
 new Vue({
+  router,
   render: h => h(App)
 }).$mount("#app");

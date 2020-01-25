@@ -23,6 +23,7 @@
         <span>検索結果:0件</span>
       </div>
     </div>
+    <BarcodeReader />
   </div>
 </template>
 
@@ -32,10 +33,12 @@ import firebase from "firebase";
 import moment from "moment";
 
 import Books from "./Books";
+import BarcodeReader from "./BarcodeReader";
 
 export default {
   components: {
-    Books
+    Books,
+    BarcodeReader
   },
   data() {
     return {

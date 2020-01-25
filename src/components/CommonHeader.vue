@@ -2,11 +2,15 @@
   <nav class="p-navbar">
     <div class="p-navbar-links">
       <div class="p-navbar-links-left">
-        <v-fa class="p-bookIcon" icon="book" />
+        <router-link to="/">
+          <v-fa class="p-bookIcon" icon="book" />
+        </router-link>
       </div>
       <div class="p-navbar-links-right">
-        <a class="p-link" href="#">書籍の登録</a>
-        <a class="p-link" href="#">書籍一覧</a>
+        <router-link class="p-link" to="/bookRegistration"
+          >書籍の登録</router-link
+        >
+        <router-link class="p-link" to="/books">書籍一覧</router-link>
       </div>
     </div>
   </nav>
