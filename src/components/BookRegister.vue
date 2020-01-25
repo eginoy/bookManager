@@ -1,14 +1,18 @@
 <template>
   <div>
     <div v-if="books.length">
-      <Books v-for="book in books" :book="book" :key="book.bookIsbnCode10"></Books>
+      <Books
+        v-for="book in books"
+        :book="book"
+        :key="book.bookIsbnCode10"
+      ></Books>
       <button
         v-if="!isDuplicateBook"
         v-bind:disabled="isRegisterd"
         class="p-bookInfo-registerButton btn btn-primary"
         v-on:click="registerBookInfo"
       >
-        <span>{{buttonMessage}}</span>
+        <span>{{ buttonMessage }}</span>
       </button>
       <div v-else>
         <span>登録済みの書籍です。</span>
@@ -80,6 +84,7 @@ export default {
         bookIsbnCode10: items.industryIdentifiers[0].identifier,
         bookIsbnCode13: items.industryIdentifiers[1].identifier,
         bookLink: items.infoLink,
+        publishedDate: items.publishedDate,
         insertDate: moment(new Date()).format("YYYY/MM/DD")
       });
 
@@ -135,5 +140,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
