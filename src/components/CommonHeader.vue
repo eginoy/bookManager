@@ -5,7 +5,7 @@
         <v-fa class="p-bookIcon" icon="book" />
       </div>
       <div class="p-navbar-links-right">
-        <a class="p-link" href="#">Scan</a>
+        <a class="p-link" href="#">書籍の登録</a>
         <a class="p-link" href="#">書籍一覧</a>
       </div>
     </div>
