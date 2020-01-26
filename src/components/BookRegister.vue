@@ -24,59 +24,59 @@
 </template>
 
 <script>
-import $ from "jquery";
-import firebase from "firebase";
-import moment from "moment";
+import $ from 'jquery'
+import firebase from 'firebase'
+import moment from 'moment'
 
-import Books from "./Books";
-import BarcodeReader from "./BarcodeReader";
+import Books from './Books'
+import BarcodeReader from './BarcodeReader'
 
 export default {
   components: {
     Books,
     BarcodeReader
   },
-  data() {
+  data () {
     return {
       books: [],
       isDuplicateBook: false,
       isRegisterd: false,
       isSearched: false,
       isScanNow: false
-    };
+    }
   },
   methods: {
-    getBookInfo: function(isbn, isSearched) {
-      const self = this;
-      self.isDuplicateBook = false;
-      self.isRegisterd = false;
-      self.isSearched = isSearched;
-      self.checkDuplicateBook(isbn);
+    getBookInfo: function (isbn, isSearched) {
+      const self = this
+      self.isDuplicateBook = false
+      self.isRegisterd = false
+      self.isSearched = isSearched
+      self.checkDuplicateBook(isbn)
       $.ajax({
         url: `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`,
         cache: false,
-        type: "get",
-        datatype: "xml"
+        type: 'get',
+        datatype: 'xml'
       }).then(
-        function(result) {
+        function (result) {
           if (result.totalItems === 0) {
-            //書籍情報の初期化
-            self.books = [];
+            // 書籍情報の初期化
+            self.books = []
           }
-          self.setBookInfo(result);
+          self.setBookInfo(result)
         },
-        function() {
-          return "error";
+        function () {
+          return 'error'
         }
-      );
+      )
     },
-    setBookInfo: function(result) {
-      const self = this;
+    setBookInfo: function (result) {
+      const self = this
 
-      //書籍情報の初期化
-      self.books = [];
-      if (result.totalItems === 0) return;
-      var items = result.items[0].volumeInfo;
+      // 書籍情報の初期化
+      self.books = []
+      if (result.totalItems === 0) return
+      var items = result.items[0].volumeInfo
 
       self.books.push({
         bookTitle: items.title,
@@ -85,64 +85,62 @@ export default {
         bookIsbnCode13: items.industryIdentifiers[1].identifier,
         bookLink: items.infoLink,
         publishedDate: items.publishedDate,
-        insertDate: moment(new Date()).format("YYYY/MM/DD")
-      });
+        insertDate: moment(new Date()).format('YYYY/MM/DD')
+      })
 
       self.checkDuplicateBook(
         self.books.bookIsbnCode10,
         self.books.bookIsbnCode13
-      );
+      )
     },
-    registerBookInfo: function() {
-      const self = this;
-      var db = firebase.database();
-      var ref = db.ref("server/saving-data/books");
+    registerBookInfo: function () {
+      const self = this
+      var db = firebase.database()
+      var ref = db.ref('server/saving-data/books')
 
-      ref.push(self.books[0]);
+      ref.push(self.books[0])
 
-      self.isRegisterd = true;
+      self.isRegisterd = true
     },
-    checkDuplicateBook: function(scanedIsbn) {
-      const self = this;
-      var db = firebase.database();
-      var ref = db.ref("server/saving-data/books");
+    checkDuplicateBook: function (scanedIsbn) {
+      const self = this
+      var db = firebase.database()
+      var ref = db.ref('server/saving-data/books')
       ref
-        .orderByChild("bookIsbnCode10")
+        .orderByChild('bookIsbnCode10')
         .startAt(scanedIsbn)
         .endAt(scanedIsbn)
-        .once("value", function(snapshot) {
-          if (!snapshot.val()) return;
-          if (Object.keys(snapshot.val()).length !== 0)
-            self.isDuplicateBook = true;
-        });
+        .once('value', function (snapshot) {
+          if (!snapshot.val()) return
+          if (Object.keys(snapshot.val()).length !== 0) { self.isDuplicateBook = true }
+        })
 
       ref
-        .orderByChild("bookIsbnCode13")
+        .orderByChild('bookIsbnCode13')
         .startAt(scanedIsbn)
         .endAt(scanedIsbn)
-        .once("value", function(snapshot) {
-          if (!snapshot.val()) return;
-          if (Object.keys(snapshot.val()).length !== 0)
-            self.isDuplicateBook = true;
-        });
+        .once('value', function (snapshot) {
+          if (!snapshot.val()) return
+          if (Object.keys(snapshot.val()).length !== 0) { self.isDuplicateBook = true }
+        })
     },
-    resetResult: function() {
-      this.books = [];
-      this.isSearched = false;
+    resetResult: function () {
+      this.books = []
+      this.isSearched = false
     }
   },
-  created: function() {
-    //バーコード読み込み時のスキャン完了イベントを待機するようセット
-    this.$eventHub.$on("success-scan", this.getBookInfo);
-    this.$eventHub.$on("scan-start", this.resetResult);
+  created: function () {
+    // バーコード読み込み時のスキャン完了イベントを待機するようセット
+    this.$eventHub.$on('success-scan', this.getBookInfo)
+    this.$eventHub.$on('scan-start', this.resetResult)
   },
   computed: {
-    buttonMessage: function() {
-      if (this.isRegisterd) return "登録済み";
-      return "登録";
+    buttonMessage: function () {
+      if (this.isRegisterd) return '登録済み'
+      return '登録'
     }
   }
-};
+}
 </script>
 
 <style scoped></style>

@@ -9,29 +9,29 @@
 </template>
 
 <script>
-import firebase from "firebase";
+import firebase from 'firebase'
 
-import Books from "./Books";
+import Books from './Books'
 
 export default {
   components: {
     Books
   },
-  data() {
+  data () {
     return {
       books: []
-    };
+    }
   },
-  created: function() {
-    const self = this;
+  created: function () {
+    const self = this
 
-    var db = firebase.database();
-    var ref = db.ref("server/saving-data/books").orderByChild("publishedDate");
-    ref.on("value", function(snapshot) {
-      self.books = snapshot.val();
-    });
+    var db = firebase.database()
+    var ref = db.ref('server/saving-data/books').orderByChild('publishedDate')
+    ref.on('value', function (snapshot) {
+      self.books = snapshot.val()
+    })
   }
-};
+}
 </script>
 
 <style scoped></style>

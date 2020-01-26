@@ -21,11 +21,11 @@
 
 <script>
 export default {
-  props: ["book"],
-  data() {
-    return {};
+  props: ['book'],
+  data () {
+    return {}
   }
-};
+}
 </script>
 
 <style scoped>
