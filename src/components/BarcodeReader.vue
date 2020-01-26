@@ -1,15 +1,21 @@
 <template>
   <div>
-    <div class="overRay">
-      <div v-show="isScan" id="interactive" class="viewport"></div>
-    </div>
-
-    <button
-      v-if="!isScan"
-      class="p-scanButton btn btn-primary"
-      type="button"
-      v-on:click="startScan"
-    >バーコードで検索</button>
+    <div class="p-scanWrapper" v-show="isScan"></div>
+    <section>
+      <button
+        v-if="!isScan"
+        class="p-scanButton btn btn-primary"
+        type="button"
+        v-on:click="startScan"
+      >
+        バーコードで検索
+      </button>
+      <div v-if="!isScan" class="p-scanDescription">
+        <p>※動作ブラウザ</p>
+        <p>iPhone:Safari</p>
+        <p>Android:Chrome</p>
+      </div>
+    </section>
 
     <!-- <input v-model="code" type="text" />
     <input v-on:click="search" value="検索" type="button" />-->
@@ -18,6 +24,7 @@
 
 <script>
 import Quagga from "quagga";
+import $ from "../../node_modules/jquery";
 
 export default {
   data() {
@@ -25,7 +32,8 @@ export default {
       code: null,
       isScan: false,
       isSearched: false,
-      width: 0
+      width: 0,
+      height: 0
     };
   },
   methods: {
@@ -37,11 +45,9 @@ export default {
           inputStream: {
             name: "Live",
             type: "LiveStream",
-            target: document.querySelector("#interactive"), //埋め込んだdivのID
+            target: document.querySelector(".p-scanWrapper"), //埋め込んだdivのID
             constraints: {
-              facingMode: "environment",
-              width: self.width * 0.9,
-              height: 480
+              facingMode: "environment"
             },
             area: {
               //必要ならバーコードの読み取り範囲を調整できる（下50%は読み取りしない）
@@ -116,17 +122,48 @@ export default {
   },
   created() {
     this.width = document.documentElement.clientWidth;
+    this.height = document.documentElement.clientHeight;
+
+    $("body").css("width", this.w);
+  },
+  watch: {
+    isScan: function() {
+      $("video").css({
+        "z-index": "-100",
+        position: "absolute",
+        width: "90%",
+        height: "60%"
+      });
+
+      $(".drawingBuffer").css({
+        position: "absolute"
+      });
+    }
   }
 };
 </script>
 
 <style scoped>
-video {
+p {
+  margin: 0;
+}
+
+.p-scanWrapper {
   display: flex;
   justify-content: center;
+  margin: 1em auto;
+  width: 100%;
+  height: 480px;
+  box-sizing: border-box;
+}
+
+.p-scanDescription {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
 }
 
 .p-scanButton {
-  margin-top: 1em;
+  margin-top: 2em;
 }
 </style>

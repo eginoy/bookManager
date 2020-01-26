@@ -26,8 +26,7 @@ export default {
     const self = this;
 
     var db = firebase.database();
-    var ref = db.ref("server/saving-data/books");
-
+    var ref = db.ref("server/saving-data/books").orderByChild("publishedDate");
     ref.on("value", function(snapshot) {
       self.books = snapshot.val();
     });
