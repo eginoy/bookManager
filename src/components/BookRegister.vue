@@ -112,7 +112,9 @@ export default {
         .endAt(scanedIsbn)
         .once('value', function (snapshot) {
           if (!snapshot.val()) return
-          if (Object.keys(snapshot.val()).length !== 0) { self.isDuplicateBook = true }
+          if (Object.keys(snapshot.val()).length !== 0) {
+            self.isDuplicateBook = true
+          }
         })
 
       ref
@@ -121,7 +123,9 @@ export default {
         .endAt(scanedIsbn)
         .once('value', function (snapshot) {
           if (!snapshot.val()) return
-          if (Object.keys(snapshot.val()).length !== 0) { self.isDuplicateBook = true }
+          if (Object.keys(snapshot.val()).length !== 0) {
+            self.isDuplicateBook = true
+          }
         })
     },
     resetResult: function () {

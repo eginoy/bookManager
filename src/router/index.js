@@ -19,6 +19,10 @@ export default new VueRouter({
     {
       path: '/bookRegistration',
       component: BookRegister
+    },
+    {
+      path: '*',
+      component: BooksList
     }
   ]
 })

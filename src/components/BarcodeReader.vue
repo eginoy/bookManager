@@ -7,9 +7,7 @@
         class="p-scanButton btn btn-primary"
         type="button"
         v-on:click="startScan"
-      >
-        バーコードで検索
-      </button>
+      >バーコードで検索</button>
       <div v-if="!isScan" class="p-scanDescription">
         <p>※動作ブラウザ</p>
         <p>iPhone:Safari</p>
@@ -87,8 +85,7 @@ export default {
           self.isScan = false
           self.isSearched = true
           self.$eventHub.$emit('success-scan', self.code, self.isSearched)
-        }
-        {
+        } else {
           self.getEanCode()
         }
       })
