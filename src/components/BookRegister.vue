@@ -1,7 +1,12 @@
 <template>
   <div>
+    <div>{{ converted }}</div>
     <div v-if="books.length">
-      <Books v-for="book in books" :book="book" :key="book.bookIsbnCode10"></Books>
+      <Books
+        v-for="book in books"
+        :book="book"
+        :key="book.bookIsbnCode10"
+      ></Books>
       <button
         v-if="!isDuplicateBook"
         v-bind:disabled="isRegisterd"
@@ -27,6 +32,7 @@
 import $ from 'jquery'
 import firebase from 'firebase'
 import moment from 'moment'
+import convert from 'xml-js'
 
 import Books from './Books'
 import BarcodeReader from './BarcodeReader'
@@ -39,6 +45,7 @@ export default {
   data () {
     return {
       books: [],
+      converted: [],
       isDuplicateBook: false,
       isRegisterd: false,
       isSearched: false,
@@ -46,17 +53,31 @@ export default {
     }
   },
   methods: {
-    getBookInfo: function (isbn, isSearched) {
+    getBookInfo: function (isbn) {
       const self = this
       self.isDuplicateBook = false
       self.isRegisterd = false
-      self.isSearched = isSearched
       self.checkDuplicateBook(isbn)
+
+      $.ajax({
+        url: `https://iss.ndl.go.jp/api/sru?operation=searchRetrieve&query=isbn=${isbn}`,
+        cache: false,
+        type: 'get'
+      }).then(
+        result => {
+          var converted = convert.xml2json(result, {})
+          self.converted = converted
+        },
+        error => {
+          return error
+        }
+      )
+
       $.ajax({
         url: `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`,
         cache: false,
         type: 'get',
-        datatype: 'xml'
+        datatype: 'json'
       }).then(
         function (result) {
           if (result.totalItems === 0) {
