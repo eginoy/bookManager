@@ -1,0 +1,52 @@
+{
+    "declaration": {
+        "attributes": {
+            "version": "1.0",
+            "encoding": "UTF-8"
+        }
+    },
+    "elements": [{
+        "type": "element",
+        "name": "searchRetrieveResponse",
+        "attributes": {
+            "xmlns": "http://www.loc.gov/zing/srw/"
+        },
+        "elements": [{
+                "type": "element",
+                "name": "version",
+                "elements": [{
+                    "type": "text",
+                    "text": "1.2"
+                }]
+            },
+            {
+                "type": "element",
+                "name": "numberOfRecords",
+                "elements": [{
+                    "type": "text",
+                    "text": "0"
+                }]
+            },
+            {
+                "type": "element",
+                "name": "nextRecordPosition",
+                "elements": [{
+                    "type": "text",
+                    "text": "0"
+                }]
+            },
+            {
+                "type": "element",
+                "name": "extraResponseData",
+                "elements": [{
+                    "type": "text",
+                    "text": "\n<facets>\n <lst name=\"REPOSITORY_NO\">\n </lst>\n <lst name=\"NDC\">\n </lst>\n <lst name=\"ISSUED_DATE\">\n </lst>\n <lst name=\"LIBRARY\">\n </lst>\n</facets>\n "
+                }]
+            },
+            {
+                "type": "element",
+                "name": "records"
+            }
+        ]
+    }]
+}

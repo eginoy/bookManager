@@ -60,13 +60,15 @@ export default {
       self.checkDuplicateBook(isbn)
 
       $.ajax({
-        url: `https://iss.ndl.go.jp/api/sru?operation=searchRetrieve&query=isbn=${isbn}`,
+        url: `https://iss.ndl.go.jp/api/sru?operation=searchRetrieve&recordPacking=xml&query=isbn=${isbn}`,
         cache: false,
-        type: 'get'
+        type: 'get',
+        datatype: 'json'
       }).then(
         result => {
-          var converted = convert.xml2json(result, {})
-          self.converted = converted
+          self.converted = convert.xml2json(
+            new XMLSerializer().serializeToString(result)
+          )
         },
         error => {
           return error
