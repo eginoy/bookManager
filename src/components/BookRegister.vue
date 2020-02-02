@@ -19,7 +19,7 @@
       </div>
     </div>
     <div v-if="!books.length && isSearched">
-      <div>
+      <div class="p-notFound">
         <span>検索結果:0件</span>
       </div>
     </div>
@@ -169,7 +169,10 @@ export default {
       switch (id) {
         case 1:
           // 国立図書館
-          if (result.elements[0].elements[1].elements[0].text === 0) break
+          if (result.elements[0].elements[1].elements[0].text === '0') {
+            self.books = []
+            break
+          }
           var title =
             result.elements[0].elements[4].elements[0].elements[2].elements[0]
               .elements[0].elements[0].text
@@ -205,15 +208,21 @@ export default {
         self.inquiryGoogleBooks(isbn)
       }
 
-      self.books.push({
-        bookTitle: self.bookTitle,
-        bookImage: self.bookImage,
-        bookIsbnCode10: self.bookIsbnCode10,
-        bookIsbnCode13: self.bookIsbnCode13,
-        bookLink: self.bookLink,
-        publishedDate: self.publishedDate,
-        insertDate: moment(new Date()).format('YYYY/MM/DD')
-      })
+      if (self.bookIsbnCode10 !== 0 || self.bookIsbnCode13 !== 0) {
+        self.books.push({
+          bookTitle: self.bookTitle,
+          bookImage:
+            self.bookImage === ''
+              ? 'http://placehold.jp/24/cccccc/ffffff/128x165.png?text=Image%0D%0ANotFound'
+              : self.bookImage,
+          bookIsbnCode10: self.bookIsbnCode10,
+          bookIsbnCode13: self.bookIsbnCode13,
+          bookLink: self.bookLink,
+          publishedDate: self.publishedDate,
+          insertDate: moment(new Date()).format('YYYY/MM/DD')
+        })
+      }
+      self.isSearched = true
     },
     registerBookInfo: function () {
       const self = this
@@ -275,4 +284,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.p-notFound {
+  margin-top: 1em;
+}
+</style>

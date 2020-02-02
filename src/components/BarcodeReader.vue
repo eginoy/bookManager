@@ -18,7 +18,7 @@
     </section>
 
     <section class="p-isbnSearchInputGroup input-group mb-3" v-if="!isScan">
-      <input
+      <!-- <input
         class="form-control"
         v-model="code"
         type="text"
@@ -31,7 +31,7 @@
           value="検索"
           type="button"
         />
-      </div>
+      </div> -->
     </section>
   </div>
 </template>
@@ -178,7 +178,7 @@ p {
 }
 
 .p-isbnSearchInputGroup {
-  width: 25em;
+  max-width: 70%;
   margin: 1em auto;
 }
 
