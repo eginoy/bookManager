@@ -251,6 +251,7 @@ export default {
         })
     },
     resetBookData: function () {
+      this.isSearched = false
       this.books = []
       this.bookTitle = ''
       this.bookImage = ''
@@ -263,7 +264,7 @@ export default {
   created: function () {
     // バーコード読み込み時のスキャン完了イベントを待機するようセット
     this.$eventHub.$on('success-scan', this.getBookInfo)
-    this.$eventHub.$on('scan-start', this.resetResult)
+    this.$eventHub.$on('scan-start', this.resetBookData)
   },
   computed: {
     buttonMessage: function () {
