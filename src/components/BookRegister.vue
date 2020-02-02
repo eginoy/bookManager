@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div>{{ converted }}</div>
     <div v-if="books.length">
       <Books
         v-for="book in books"
@@ -45,7 +44,9 @@ export default {
   data () {
     return {
       books: [],
-      converted: [],
+      gb: [],
+      cl: [],
+      ob: [],
       isDuplicateBook: false,
       isRegisterd: false,
       isSearched: false,
@@ -59,22 +60,25 @@ export default {
       self.isRegisterd = false
       self.checkDuplicateBook(isbn)
 
+      // 国立図書館への問い合わせ
       $.ajax({
         url: `https://iss.ndl.go.jp/api/sru?operation=searchRetrieve&recordPacking=xml&query=isbn=${isbn}`,
         cache: false,
         type: 'get',
-        datatype: 'json'
+        datatype: 'xml'
       }).then(
-        result => {
-          self.converted = convert.xml2json(
-            new XMLSerializer().serializeToString(result)
+        data => {
+          var result = JSON.parse(
+            convert.xml2json(new XMLSerializer().serializeToString(data))
           )
+          self.setBookInfo(result, isbn, 1)
         },
         error => {
           return error
         }
       )
 
+      // Google Books APIへの問い合わせ
       $.ajax({
         url: `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`,
         cache: false,
@@ -82,35 +86,103 @@ export default {
         datatype: 'json'
       }).then(
         function (result) {
-          if (result.totalItems === 0) {
-            // 書籍情報の初期化
-            self.books = []
-          }
-          self.setBookInfo(result)
+          self.setBookInfo(result, isbn, 2)
+        },
+        function () {
+          return 'error'
+        }
+      )
+
+      // OpenBDへの問い合わせ
+      $.ajax({
+        url: `https://api.openbd.jp/v1/get?isbn=${isbn}`,
+        cache: false,
+        type: 'get',
+        datatype: 'json'
+      }).then(
+        function (result) {
+          self.setBookInfo(result, isbn, 3)
         },
         function () {
           return 'error'
         }
       )
     },
-    setBookInfo: function (result) {
+    setBookInfo: function (result, isbn, id) {
       const self = this
+      var items
+
+      var bookTitle = ''
+      var bookImage = ''
+      var bookIsbnCode10 = 0
+      var bookIsbnCode13 = 0
+      var bookLink = ''
+      var publishedDate = ''
 
       // 書籍情報の初期化
       self.books = []
-      if (result.totalItems === 0) return
-      var items = result.items[0].volumeInfo
+
+      switch (id) {
+        case 1:
+          // 国立図書館
+          if (result.elements[0].elements[1].elements[0].text === 0) break
+
+          bookTitle =
+            result.elements[0].elements[4].elements[0].elements[2].elements[0]
+              .elements[0].elements[0].text
+
+          isbn.length === 10 ? (bookIsbnCode10 = isbn) : (bookIsbnCode13 = isbn)
+
+          bookLink =
+            isbn !== undefined
+              ? `https://www.amazon.co.jp/s?k=${isbn}&__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&ref=nb_sb_noss`
+              : null
+
+          publishedDate = null
+
+          break
+        case 2:
+          // Google Books API
+          if (result.totalItems === 0) break
+          items = result.items[0].volumeInfo
+
+          bookTitle = items.title
+          bookImage = items.imageLinks.smallThumbnail
+          bookIsbnCode10 = items.industryIdentifiers[0].identifier
+          bookIsbnCode13 = items.industryIdentifiers[1].identifier
+          bookLink = `https://www.amazon.co.jp/s?k=${isbn}&__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&ref=nb_sb_noss`
+          publishedDate = items.publishedDate
+          break
+        case 3:
+          // OpenBD
+          if (result[0] === null) break
+          items = result[0].summary
+
+          bookTitle = items.title
+          bookImage = items.cover
+          isbn.length === 10
+            ? (bookIsbnCode10 = items.isbn)
+            : (bookIsbnCode13 = items.isbn)
+          bookLink = `https://www.amazon.co.jp/s?k=${isbn}&__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&ref=nb_sb_noss`
+          publishedDate = items.pubdate
+          break
+      }
+
+      if (bookIsbnCode10 === 0 && bookIsbnCode13 === 0) {
+        return (self.isSearched = true)
+      }
 
       self.books.push({
-        bookTitle: items.title,
-        bookImage: items.imageLinks.smallThumbnail,
-        bookIsbnCode10: items.industryIdentifiers[0].identifier,
-        bookIsbnCode13: items.industryIdentifiers[1].identifier,
-        bookLink: items.infoLink,
-        publishedDate: items.publishedDate,
+        bookTitle: bookTitle,
+        bookImage: bookImage,
+        bookIsbnCode10: bookIsbnCode10,
+        bookIsbnCode13: bookIsbnCode13,
+        bookLink: bookLink,
+        publishedDate: publishedDate,
         insertDate: moment(new Date()).format('YYYY/MM/DD')
       })
 
+      // 登録済みの書籍情報と照合
       self.checkDuplicateBook(
         self.books.bookIsbnCode10,
         self.books.bookIsbnCode13
