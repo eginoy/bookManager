@@ -7,7 +7,9 @@
         class="p-scanButton btn btn-primary"
         type="button"
         v-on:click="startScan"
-      >バーコードで検索</button>
+      >
+        バーコードで検索
+      </button>
       <div v-if="!isScan" class="p-scanDescription">
         <p>※動作ブラウザ</p>
         <p>iPhone:Safari</p>
@@ -15,8 +17,22 @@
       </div>
     </section>
 
-    <!-- <input v-model="code" type="text" />
-    <input v-on:click="search" value="検索" type="button" />-->
+    <section class="p-isbnSearchInputGroup input-group mb-3" v-if="!isScan">
+      <!-- <input
+        class="form-control"
+        v-model="code"
+        type="text"
+        placeholder="上段バーコードのISBNコードを入力"
+      />
+      <div class="input-group-append">
+        <input
+          class="btn btn-primary"
+          v-on:click="search"
+          value="検索"
+          type="button"
+        />
+      </div> -->
+    </section>
   </div>
 </template>
 
@@ -84,7 +100,8 @@ export default {
           Quagga.stop()
           self.isScan = false
           self.isSearched = true
-          self.$eventHub.$emit('success-scan', self.code, self.isSearched)
+          Quagga.stop()
+          self.$eventHub.$emit('success-scan', self.code)
         } else {
           self.getEanCode()
         }
@@ -108,8 +125,8 @@ export default {
     },
     search: function () {
       // 開発時用の検索イベント発行
-      // this.isSearched = true;
-      // this.$eventHub.$emit("success-scan", this.code, this.isSearched);
+      this.isSearched = true
+      this.$eventHub.$emit('success-scan', this.code)
     }
   },
   updated () {
@@ -158,6 +175,11 @@ p {
   display: flex;
   justify-content: space-around;
   flex-direction: column;
+}
+
+.p-isbnSearchInputGroup {
+  max-width: 70%;
+  margin: 1em auto;
 }
 
 .p-scanButton {

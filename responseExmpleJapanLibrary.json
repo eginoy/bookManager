@@ -1,0 +1,73 @@
+{
+    "kind": "books#volumes",
+    "totalItems": 1,
+    "items": [{
+        "kind": "books#volume",
+        "id": "apm_tAEACAAJ",
+        "etag": "ijGveaNLjuY",
+        "selfLink": "https://www.googleapis.com/books/v1/volumes/apm_tAEACAAJ",
+        "volumeInfo": {
+            "title": "問題解決大全",
+            "subtitle": "ビジネスや人生のハードルを乗り越える37のツール",
+            "authors": [
+                "読書猿"
+            ],
+            "publishedDate": "2017-11",
+            "description": "哲学歴史経済学人類学数学物理学生物学文学...知の巨人の肩の上で問題を解く。",
+            "industryIdentifiers": [{
+                    "type": "ISBN_10",
+                    "identifier": "4894517809"
+                },
+                {
+                    "type": "ISBN_13",
+                    "identifier": "9784894517806"
+                }
+            ],
+            "readingModes": {
+                "text": false,
+                "image": false
+            },
+            "pageCount": 412,
+            "printType": "BOOK",
+            "maturityRating": "NOT_MATURE",
+            "allowAnonLogging": false,
+            "contentVersion": "preview-1.0.0",
+            "panelizationSummary": {
+                "containsEpubBubbles": false,
+                "containsImageBubbles": false
+            },
+            "imageLinks": {
+                "smallThumbnail": "http://books.google.com/books/content?id=apm_tAEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+                "thumbnail": "http://books.google.com/books/content?id=apm_tAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
+            },
+            "language": "ja",
+            "previewLink": "http://books.google.co.jp/books?id=apm_tAEACAAJ&dq=isbn:9784894517806&hl=&cd=1&source=gbs_api",
+            "infoLink": "http://books.google.co.jp/books?id=apm_tAEACAAJ&dq=isbn:9784894517806&hl=&source=gbs_api",
+            "canonicalVolumeLink": "https://books.google.com/books/about/%E5%95%8F%E9%A1%8C%E8%A7%A3%E6%B1%BA%E5%A4%A7%E5%85%A8.html?hl=&id=apm_tAEACAAJ"
+        },
+        "saleInfo": {
+            "country": "JP",
+            "saleability": "NOT_FOR_SALE",
+            "isEbook": false
+        },
+        "accessInfo": {
+            "country": "JP",
+            "viewability": "NO_PAGES",
+            "embeddable": false,
+            "publicDomain": false,
+            "textToSpeechPermission": "ALLOWED",
+            "epub": {
+                "isAvailable": false
+            },
+            "pdf": {
+                "isAvailable": false
+            },
+            "webReaderLink": "http://play.google.com/books/reader?id=apm_tAEACAAJ&hl=&printsec=frontcover&source=gbs_api",
+            "accessViewStatus": "NONE",
+            "quoteSharingAllowed": false
+        },
+        "searchInfo": {
+            "textSnippet": "哲学歴史経済学人類学数学物理学生物学文学...知の巨人の肩の上で問題を解く。"
+        }
+    }]
+}
