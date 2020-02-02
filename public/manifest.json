@@ -1,0 +1,6 @@
+{
+    "name": "BookManager", // アプリケーション名
+    "short_name": "BookManager", // 短縮名
+    "display": "standalone", // これを指定するとブラウザーの枠がなくなり、よりアプリっぽくなる
+    "permissions": ["https://iss.ndl.go.jp/api/sru"]
+}

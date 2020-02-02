@@ -40,6 +40,8 @@ export default {
 }
 
 .p-bookInfo-image {
+  max-height: 165px;
+  max-width: 128px;
 }
 
 .p-bookInfo-detail {
