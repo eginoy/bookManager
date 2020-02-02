@@ -44,13 +44,17 @@ export default {
   data () {
     return {
       books: [],
-      gb: [],
-      cl: [],
-      ob: [],
+      bookTitle: '',
+      bookImage: '',
+      bookIsbnCode10: 0,
+      bookIsbnCode13: 0,
+      bookLink: '',
+      publishedDate: '',
       isDuplicateBook: false,
       isRegisterd: false,
       isSearched: false,
-      isScanNow: false
+      isScanNow: false,
+      inquiryCount: 0
     }
   },
   methods: {
@@ -60,146 +64,154 @@ export default {
       self.isRegisterd = false
       self.checkDuplicateBook(isbn)
       self.isSearched = true
+      self.inquiryCount = 0
+      self.resetBookData()
 
-      // 国立図書館への問い合わせ
-      function inquiryNationalLibrary (isbn) {
-        return $.ajax({
-          url: `https://iss.ndl.go.jp/api/sru?operation=searchRetrieve&recordPacking=xml&query=isbn=${isbn}`,
-          cache: false,
-          type: 'get',
-          datatype: 'xml'
-        }).then(
-          data => {
-            var result = JSON.parse(
-              convert.xml2json(new XMLSerializer().serializeToString(data))
-            )
-            self.setBookInfo(result, isbn, 1)
-          },
-          error => {
-            return error
-          }
-        )
-      }
-
-      // Google Books APIへの問い合わせ
-      function inquiryGoogleBooks (isbn) {
-        return $.ajax({
-          url: `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`,
-          cache: false,
-          type: 'get',
-          datatype: 'json'
-        }).then(
-          function (result) {
-            var isFind = true
-            if (result.totalItems === 0) {
-              isFind = false
-            } else {
-              self.setBookInfo(result, isbn, 2)
-            }
-            return $.Deferred().resolve(isFind)
-          },
-          function () {
-            return 'error'
-          }
-        )
-      }
-
-      // OpenBDへの問い合わせ
-      function inquiryOpenBd (isbn) {
-        return $.ajax({
-          url: `https://api.openbd.jp/v1/get?isbn=${isbn}`,
-          cache: false,
-          type: 'get',
-          datatype: 'json'
-        }).then(
-          function (result) {
-            var isFind = true
-            if (result[0] === null) {
-              isFind = false
-            } else {
-              self.setBookInfo(result, isbn, 3)
-            }
-            return $.Deferred().resolve(isFind)
-          },
-          function () {
-            return 'error'
-          }
-        )
-      }
-
-      inquiryOpenBd(isbn).done(function (isFind) {
+      // OpenBD,GoogleBooks,国立図書館の順番に検索していって検索ヒットしない場合のみ次のapiで検索する（応答速度が早いものから検索かけている）
+      self.inquiryOpenBd(isbn).done(function (isFind) {
         if (!isFind) {
-          inquiryGoogleBooks(isbn).done(function (isFind) {
-            if (!isFind) inquiryNationalLibrary(isbn).done(function () {})
+          self.inquiryGoogleBooks(isbn).done(function (isFind) {
+            if (!isFind) self.inquiryNationalLibrary(isbn).done(function () {})
           })
         }
       })
     },
+    // 国立図書館への問い合わせ
+    inquiryNationalLibrary (isbn) {
+      const self = this
+      return $.ajax({
+        url: `https://iss.ndl.go.jp/api/sru?operation=searchRetrieve&recordPacking=xml&query=isbn=${isbn}`,
+        cache: false,
+        type: 'get',
+        datatype: 'xml'
+      }).then(
+        data => {
+          var result = JSON.parse(
+            convert.xml2json(new XMLSerializer().serializeToString(data))
+          )
+          self.setBookInfo(result, isbn, 1)
+        },
+        error => {
+          return error
+        }
+      )
+    }, // Google Books APIへの問い合わせ
+    inquiryGoogleBooks (isbn) {
+      const self = this
+      return $.ajax({
+        url: `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`,
+        cache: false,
+        type: 'get',
+        datatype: 'json'
+      }).then(
+        function (result) {
+          var isFind = true
+          if (result.totalItems === 0) {
+            isFind = false
+          } else {
+            self.setBookInfo(result, isbn, 2)
+          }
+          return $.Deferred().resolve(isFind)
+        },
+        function () {
+          return 'error'
+        }
+      )
+    }, // OpenBDへの問い合わせ
+    inquiryOpenBd (isbn) {
+      const self = this
+      return $.ajax({
+        url: `https://api.openbd.jp/v1/get?isbn=${isbn}`,
+        cache: false,
+        type: 'get',
+        datatype: 'json'
+      }).then(
+        function (result) {
+          var isFind = true
+          if (result[0] === null) {
+            isFind = false
+          } else {
+            self.setBookInfo(result, isbn, 3)
+          }
+          return $.Deferred().resolve(isFind)
+        },
+        function () {
+          return 'error'
+        }
+      )
+    },
     setBookInfo: function (result, isbn, id) {
       const self = this
       var items
-
-      var bookTitle = ''
-      var bookImage = ''
-      var bookIsbnCode10 = 0
-      var bookIsbnCode13 = 0
-      var bookLink = ''
-      var publishedDate = ''
-
-      // 書籍情報の初期化
       self.books = []
+
+      function setBookData (isbn, bookTitle, bookImage, publishedDate) {
+        if (self.bookTitle === '') self.bookTitle = bookTitle
+        if (self.bookImage === '') self.bookImage = bookImage
+
+        if (self.bookIsbnCode10 === 0 && isbn.length === 10) {
+          self.bookIsbnCode10 = isbn
+        }
+
+        if (self.bookIsbnCode13 === 0 && isbn.length === 13) {
+          self.bookIsbnCode13 = isbn
+        }
+
+        if (self.bookLink === '') {
+          self.bookLink = `https://www.amazon.co.jp/s?k=${isbn}&__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&ref=nb_sb_noss`
+        }
+
+        if (self.publishedDate === '') {
+          self.publishedDate = moment(publishedDate).format('YYYY-MM-DD')
+        }
+      }
 
       switch (id) {
         case 1:
           // 国立図書館
           if (result.elements[0].elements[1].elements[0].text === 0) break
-
-          bookTitle =
+          var title =
             result.elements[0].elements[4].elements[0].elements[2].elements[0]
               .elements[0].elements[0].text
 
-          isbn.length === 10 ? (bookIsbnCode10 = isbn) : (bookIsbnCode13 = isbn)
-
-          bookLink =
-            isbn !== undefined
-              ? `https://www.amazon.co.jp/s?k=${isbn}&__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&ref=nb_sb_noss`
-              : null
-
-          publishedDate = null
-
+          setBookData(isbn, title, '', '')
           break
         case 2:
           // Google Books API
           items = result.items[0].volumeInfo
-
-          bookTitle = items.title
-          bookImage = items.imageLinks.smallThumbnail
-          bookIsbnCode10 = items.industryIdentifiers[0].identifier
-          bookIsbnCode13 = items.industryIdentifiers[1].identifier
-          bookLink = `https://www.amazon.co.jp/s?k=${isbn}&__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&ref=nb_sb_noss`
-          publishedDate = items.publishedDate
+          setBookData(
+            isbn,
+            items.title,
+            items.imageLinks.smallThumbnail,
+            items.publishedDate
+          )
           break
         case 3:
           // OpenBD
           items = result[0].summary
-
-          bookTitle = items.title
-          bookImage = items.cover
-          isbn.length === 10
-            ? (bookIsbnCode10 = items.isbn)
-            : (bookIsbnCode13 = items.isbn)
-          bookLink = `https://www.amazon.co.jp/s?k=${isbn}&__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&ref=nb_sb_noss`
-          publishedDate = items.pubdate
+          setBookData(isbn, items.title, items.cover, items.pubdate)
           break
       }
 
+      // 書籍情報で取得できていない項目を別のapiで補完できるか一度だけトライ
+      if (
+        (self.bookImage === '' ||
+          self.bookIsbnCode10 === 0 ||
+          self.bookIsbnCode13 === 0 ||
+          self.publishedDate === '') &&
+        self.inquiryCount === 0
+      ) {
+        self.inquiryCount++
+        self.inquiryGoogleBooks(isbn)
+      }
+
       self.books.push({
-        bookTitle: bookTitle,
-        bookImage: bookImage,
-        bookIsbnCode10: bookIsbnCode10,
-        bookIsbnCode13: bookIsbnCode13,
-        bookLink: bookLink,
-        publishedDate: publishedDate,
+        bookTitle: self.bookTitle,
+        bookImage: self.bookImage,
+        bookIsbnCode10: self.bookIsbnCode10,
+        bookIsbnCode13: self.bookIsbnCode13,
+        bookLink: self.bookLink,
+        publishedDate: self.publishedDate,
         insertDate: moment(new Date()).format('YYYY/MM/DD')
       })
     },
@@ -237,11 +249,16 @@ export default {
             self.isDuplicateBook = true
           }
         })
+    },
+    resetBookData: function () {
+      this.books = []
+      this.bookTitle = ''
+      this.bookImage = ''
+      this.bookIsbnCode10 = 0
+      this.bookIsbnCode13 = 0
+      this.bookLink = ''
+      this.publishedDate = ''
     }
-    // resetResult: function () {
-    //   this.books = []
-    //   this.isSearched = false
-    // }
   },
   created: function () {
     // バーコード読み込み時のスキャン完了イベントを待機するようセット
