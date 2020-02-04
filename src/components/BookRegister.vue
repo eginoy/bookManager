@@ -18,7 +18,7 @@
         <span>登録済みの書籍です。</span>
       </div>
     </div>
-    <div v-if="!books.length && isSearched">
+    <div v-if="isEmptyResult">
       <div class="p-notFound">
         <span>検索結果:0件</span>
       </div>
@@ -143,7 +143,6 @@ export default {
     setBookInfo: function (result, isbn, id) {
       const self = this
       var items
-      self.books = []
 
       function setBookData (isbn, bookTitle, bookImage, publishedDate) {
         if (self.bookTitle === '') self.bookTitle = bookTitle
@@ -209,20 +208,23 @@ export default {
       }
 
       if (self.bookIsbnCode10 !== 0 || self.bookIsbnCode13 !== 0) {
-        self.books.push({
-          bookTitle: self.bookTitle,
-          bookImage:
-            self.bookImage === ''
-              ? 'http://placehold.jp/24/cccccc/ffffff/128x165.png?text=Image%0D%0ANotFound'
-              : self.bookImage,
-          bookIsbnCode10: self.bookIsbnCode10,
-          bookIsbnCode13: self.bookIsbnCode13,
-          bookLink: self.bookLink,
-          publishedDate: self.publishedDate,
-          insertDate: moment(new Date()).format('YYYY/MM/DD')
-        })
+        self.books = [
+          {
+            bookTitle: self.bookTitle,
+            bookImage:
+              self.bookImage === ''
+                ? 'http://placehold.jp/24/cccccc/ffffff/128x165.png?text=Image%0D%0ANotFound'
+                : self.bookImage,
+            bookIsbnCode10: self.bookIsbnCode10,
+            bookIsbnCode13: self.bookIsbnCode13,
+            bookLink: self.bookLink,
+            publishedDate: self.publishedDate,
+            insertDate: moment(new Date()).format('YYYY/MM/DD')
+          }
+        ]
       }
       self.isSearched = true
+      if (self.books[0].bookTitle === '') self.resetBookData()
     },
     registerBookInfo: function () {
       const self = this
@@ -260,7 +262,6 @@ export default {
         })
     },
     resetBookData: function () {
-      this.isSearched = false
       this.books = []
       this.bookTitle = ''
       this.bookImage = ''
@@ -268,6 +269,7 @@ export default {
       this.bookIsbnCode13 = 0
       this.bookLink = ''
       this.publishedDate = ''
+      this.isScanNow = true
     }
   },
   created: function () {
@@ -279,6 +281,10 @@ export default {
     buttonMessage: function () {
       if (this.isRegisterd) return '登録済み'
       return '登録'
+    },
+    isEmptyResult: function () {
+      if (this.books.length === 0 && this.isSearched && !this.isScanNow) { return true }
+      return false
     }
   }
 }
