@@ -5,6 +5,9 @@
         <router-link to="/">
           <v-fa class="p-bookIcon" icon="book" />
         </router-link>
+        <span class="p-userName" v-if="currentUserName !== ''"
+          >こんにちは、{{ currentUserName }}さん</span
+        >
       </div>
       <div class="p-navbar-links-right">
         <router-link class="p-link" to="/bookRegistration"
@@ -16,7 +19,25 @@
   </nav>
 </template>
 
-<script></script>
+<script>
+import firebase from 'firebase/app'
+import 'firebase/database'
+import 'firebase/auth'
+
+export default {
+  data () {
+    return {
+      currentUserName: ''
+    }
+  },
+  created () {
+    const self = this
+    firebase.auth().onAuthStateChanged(function (user) {
+      self.currentUserName = user.displayName
+    })
+  }
+}
+</script>
 
 <style scoped>
 .p-navbar {
@@ -31,6 +52,13 @@
 
 .p-navbar-links-left {
   margin-right: auto;
+}
+
+.p-userName {
+  color: white;
+  display: inline-block;
+  position: relative;
+  top: -25%;
 }
 
 .p-navbar-links-right {
