@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <div>
+  <div class="p-pageWrapper">
+    <div class="p-message">
       <span>ログインすると以下の機能が利用できます。</span>
-      <ul>
-        <li>書籍の登録</li>
+      <ul class="p-message-list">
+        <li>バーコード情報から書籍の登録</li>
         <li>登録された書籍の閲覧</li>
       </ul>
     </div>
@@ -55,7 +55,20 @@ export default {
 </script>
 
 <style>
-.p-loginButton {
+.p-pageWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.p-message {
   margin: 1em 0;
+}
+
+.p-message-list {
+  margin: 0.5em 0 0 1em;
+}
+
+.p-loginButton {
 }
 </style>

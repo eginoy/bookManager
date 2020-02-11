@@ -5,9 +5,10 @@
         <router-link to="/">
           <v-fa class="p-bookIcon" icon="book" />
         </router-link>
-        <span class="p-userName" v-if="currentUserName !== ''"
+        <span class="p-headerLabel" v-if="currentUserName !== ''"
           >こんにちは、{{ currentUserName }}さん</span
         >
+        <span class="p-headerLabel" v-else>BookManager</span>
       </div>
       <div class="p-navbar-links-right">
         <slide right noOverlay width="250" v-if="isBurgerShow && isLogined">
@@ -118,7 +119,7 @@ export default {
   background-color: white;
 }
 
-.p-userName {
+.p-headerLabel {
   color: white;
   display: inline-block;
   position: relative;
