@@ -1,7 +1,14 @@
 <template>
   <div>
+    <div>
+      <span>ログインすると以下の機能が利用できます。</span>
+      <ul>
+        <li>書籍の登録</li>
+        <li>登録された書籍の閲覧</li>
+      </ul>
+    </div>
     <button @click="googleLogin" class="p-loginButton btn btn-primary">
-      Googleでログイン
+      Googleアカウントでログイン
     </button>
   </div>
 </template>

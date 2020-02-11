@@ -44,4 +44,11 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.p-booksWrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+</style>

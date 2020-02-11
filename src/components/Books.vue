@@ -40,6 +40,13 @@ export default {
   padding: 1em;
 }
 
+.p-bookInfo__empty {
+  height: 0;
+  width: 300px;
+  padding: 0 1em;
+  margin: 0 1em;
+}
+
 .p-bookInfo-image {
   max-height: 165px;
   max-width: 128px;
@@ -51,6 +58,7 @@ export default {
   justify-content: center;
   margin: 0 auto;
   max-width: 9em;
+  text-align: center;
 }
 
 .p-bookInfo-detail-title {

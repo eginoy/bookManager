@@ -10,7 +10,7 @@
         >
       </div>
       <div class="p-navbar-links-right">
-        <slide right noOverlay width="250" v-if="isBurgerShow">
+        <slide right noOverlay width="250" v-if="isBurgerShow && isLogined">
           <router-link class="p-link" to="/bookRegistration"
             >書籍登録</router-link
           >
@@ -22,7 +22,7 @@
             >ログアウト</router-link
           >
         </slide>
-        <div v-else>
+        <div v-else-if="isLogined">
           <router-link class="p-link" to="/bookRegistration"
             >書籍登録</router-link
           >
