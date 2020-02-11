@@ -1,3 +1,11 @@
+<template>
+  <div>
+    <button @click="googleLogin" class="p-loginButton btn btn-primary">
+      Googleでログイン
+    </button>
+  </div>
+</template>
+
 <script>
 import firebase from 'firebase/app'
 import 'firebase/database'
@@ -10,29 +18,37 @@ export default {
       errorMessage: ''
     }
   },
-  created () {
-    const self = this
-    const provider = new firebase.auth.GoogleAuthProvider()
-    firebase
-      .auth()
-      .signInWithRedirect(provider)
-      .then(function (result) {
-        console.log(result)
-        const userData = {
-          id: result.user.uid,
-          name: result.user.displayName,
-          domain: result.additionalUserInfo.profile.hd
-        }
-        console.log(userData)
-        const db = firebase.database().ref('server/saving-data/users')
-        db.child(userData.id).set(userData)
-        self.$router.push('/')
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-  }
+  methods: {
+    googleLogin () {
+      const self = this
+      const provider = new firebase.auth.GoogleAuthProvider()
+      firebase
+        .auth()
+        .signInWithRedirect(provider)
+        .then(function (result) {
+          console.log(result)
+          const userData = {
+            id: result.user.uid,
+            name: result.user.displayName,
+            domain: result.additionalUserInfo.profile.hd
+          }
+          console.log(userData)
+          const db = firebase.database().ref('server/saving-data/users')
+          db.child(userData.id).set(userData)
+          self.$router.push('/')
+        })
+        .catch(function (error) {
+          console.log(error)
+          self.$router.push({ path: '/' })
+        })
+    }
+  },
+  created () {}
 }
 </script>
 
-<style lang="" scoped></style>
+<style>
+.p-loginButton {
+  margin: 1em 0;
+}
+</style>

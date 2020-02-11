@@ -10,10 +10,18 @@
         >
       </div>
       <div class="p-navbar-links-right">
-        <router-link class="p-link" to="/bookRegistration"
-          >書籍登録</router-link
-        >
-        <router-link class="p-link" to="/books">書籍一覧</router-link>
+        <slide right noOverlay>
+          <router-link class="p-link" to="/bookRegistration"
+            >書籍登録</router-link
+          >
+          <router-link class="p-link" to="/books">書籍一覧</router-link>
+          <router-link v-if="!isLogined" class="p-link" to="/login"
+            >ログイン</router-link
+          >
+          <router-link v-else class="p-link" to="/logout"
+            >ログアウト</router-link
+          >
+        </slide>
       </div>
     </div>
   </nav>
@@ -23,23 +31,33 @@
 import firebase from 'firebase/app'
 import 'firebase/database'
 import 'firebase/auth'
+import { Slide } from 'vue-burger-menu'
 
 export default {
   data () {
     return {
-      currentUserName: ''
+      currentUserName: '',
+      isLogined: false
     }
+  },
+  components: {
+    Slide
   },
   created () {
     const self = this
     firebase.auth().onAuthStateChanged(function (user) {
+      if (!user) {
+        self.currentUserName = ''
+        self.isLogined = false
+      }
       self.currentUserName = user.displayName
+      self.isLogined = true
     })
   }
 }
 </script>
 
-<style scoped>
+<style>
 .p-navbar {
   background-color: #007bff;
   height: 3em;
@@ -52,6 +70,23 @@ export default {
 
 .p-navbar-links-left {
   margin-right: auto;
+}
+
+.bm-menu {
+  background-color: #007bff;
+}
+
+.bm-cross {
+  background: white;
+}
+
+.bm-burger-button {
+  top: 8px;
+  right: 17px !important;
+}
+
+.bm-burger-bars {
+  background-color: white;
 }
 
 .p-userName {

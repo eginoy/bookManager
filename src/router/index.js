@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import BooksList from '../components/BooksList'
 import BookRegister from '../components/BookRegister'
 import Login from '../components/Login'
+import Logout from '../components/Logout'
 
 import firebase from 'firebase/app'
 import 'firebase/database'
@@ -28,6 +29,13 @@ const router = new VueRouter({
     {
       path: '/login',
       component: Login,
+      meta: {
+        isPublic: true
+      }
+    },
+    {
+      path: '/logout',
+      component: Logout,
       meta: {
         isPublic: true
       }
