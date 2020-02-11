@@ -10,7 +10,7 @@
         >
       </div>
       <div class="p-navbar-links-right">
-        <slide right noOverlay width="250">
+        <slide right noOverlay width="250" v-if="isBurgerShow">
           <router-link class="p-link" to="/bookRegistration"
             >書籍登録</router-link
           >
@@ -22,6 +22,18 @@
             >ログアウト</router-link
           >
         </slide>
+        <div v-else>
+          <router-link class="p-link" to="/bookRegistration"
+            >書籍登録</router-link
+          >
+          <router-link class="p-link" to="/books">書籍一覧</router-link>
+          <router-link v-if="!isLogined" class="p-link" to="/login"
+            >ログイン</router-link
+          >
+          <router-link v-else class="p-link" to="/logout"
+            >ログアウト</router-link
+          >
+        </div>
       </div>
     </div>
   </nav>
@@ -31,17 +43,25 @@
 import firebase from 'firebase/app'
 import 'firebase/database'
 import 'firebase/auth'
+
+import $ from 'jquery'
 import { Slide } from 'vue-burger-menu'
 
 export default {
   data () {
     return {
       currentUserName: '',
-      isLogined: false
+      isLogined: false,
+      isBurgerShow: false
     }
   },
   components: {
     Slide
+  },
+  methods: {
+    resizeHandler () {
+      this.isBurgerShow = $(window).width() < 600
+    }
   },
   created () {
     const self = this
@@ -53,6 +73,11 @@ export default {
       self.currentUserName = user.displayName
       self.isLogined = true
     })
+
+    window.addEventListener('resize', this.resizeHandler)
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.resizeHandler)
   }
 }
 </script>
