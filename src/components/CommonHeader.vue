@@ -52,7 +52,7 @@ export default {
     return {
       currentUserName: '',
       isLogined: false,
-      isBurgerShow: false
+      isBurgerShow: true
     }
   },
   components: {
@@ -140,5 +140,11 @@ export default {
   text-decoration: none;
   display: inline-block;
   margin: 0.7em 1em;
+}
+
+@media screen and (max-width: 350px) {
+  .p-userName {
+    font-size: 0.8em;
+  }
 }
 </style>
