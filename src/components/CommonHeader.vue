@@ -10,7 +10,7 @@
         >
       </div>
       <div class="p-navbar-links-right">
-        <slide right noOverlay>
+        <slide right noOverlay width="250">
           <router-link class="p-link" to="/bookRegistration"
             >書籍登録</router-link
           >
@@ -78,6 +78,10 @@ export default {
 
 .bm-cross {
   background: white;
+}
+
+.bm-cross-button {
+  right: 220px !important;
 }
 
 .bm-burger-button {
