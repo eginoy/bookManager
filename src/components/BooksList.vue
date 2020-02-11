@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="p-booksWrapper">
     <Books
       v-for="book in books"
       :book="book"
@@ -10,7 +10,7 @@
 
 <script>
 import firebase from 'firebase'
-
+import $ from 'jquery'
 import Books from './Books'
 
 export default {
@@ -30,8 +30,18 @@ export default {
     ref.on('value', function (snapshot) {
       self.books = snapshot.val()
     })
+  },
+  updated () {
+    this.$nextTick(function () {
+      var $books = $('.p-booksWrapper')
+      var emptyBookInfo = []
+      for (var i = 0; i < $books.find('.p-bookInfo').length; i++) {
+        emptyBookInfo.push($('<div>', { class: 'p-bookInfo__empty' }))
+      }
+      $books.append(emptyBookInfo)
+    })
   }
 }
 </script>
 
-<style scoped></style>
+<style></style>

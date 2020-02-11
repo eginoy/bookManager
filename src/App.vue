@@ -23,4 +23,17 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+
+.p-booksWrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.p-bookInfo__empty {
+  height: 0;
+  width: 300px;
+  padding: 0 1em;
+  margin: 0 1em;
+}
 </style>

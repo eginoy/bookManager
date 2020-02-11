@@ -28,11 +28,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .p-bookInfo {
-  max-width: 300px;
+  width: 300px;
+  height: 200px;
   display: flex;
-  margin: 1em auto;
+  margin: 1em;
   border: solid 1px #c0c0c0;
   box-shadow: 0px 0px 10px;
   border-radius: 0.5em;
@@ -54,6 +55,7 @@ export default {
 
 .p-bookInfo-detail-title {
   margin-bottom: 1em;
+  overflow: hidden;
 }
 .p-bookInfo-detail-link {
   text-decoration: none;

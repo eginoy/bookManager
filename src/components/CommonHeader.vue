@@ -73,7 +73,7 @@ export default {
       self.currentUserName = user.displayName
       self.isLogined = true
     })
-
+    this.isBurgerShow = $(window).width() < 600
     window.addEventListener('resize', this.resizeHandler)
   },
   beforeDestroy () {
