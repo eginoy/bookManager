@@ -62,7 +62,7 @@ export default {
 }
 
 .p-message {
-  margin: 1em 0;
+  margin: 3em 0;
 }
 
 .p-message-list {

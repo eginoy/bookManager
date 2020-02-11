@@ -47,7 +47,7 @@ const router = new VueRouter({
   ]
 })
 
-router.beforeEach(function (to, from, next) {
+router.beforeResolve(function (to, from, next) {
   firebase.auth().onAuthStateChanged(function (user) {
     if (to.matched.some(rec => rec.meta.isPublic)) {
       // ・ログインしていない状態でログアウト
