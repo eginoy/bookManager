@@ -28,15 +28,23 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .p-bookInfo {
-  max-width: 300px;
+  width: 300px;
+  height: 200px;
   display: flex;
-  margin: 1em auto;
+  margin: 1em;
   border: solid 1px #c0c0c0;
   box-shadow: 0px 0px 10px;
   border-radius: 0.5em;
   padding: 1em;
+}
+
+.p-bookInfo__empty {
+  height: 0;
+  width: 300px;
+  padding: 0 1em;
+  margin: 0 1em;
 }
 
 .p-bookInfo-image {
@@ -50,10 +58,12 @@ export default {
   justify-content: center;
   margin: 0 auto;
   max-width: 9em;
+  text-align: center;
 }
 
 .p-bookInfo-detail-title {
   margin-bottom: 1em;
+  overflow: scroll;
 }
 .p-bookInfo-detail-link {
   text-decoration: none;
