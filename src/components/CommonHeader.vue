@@ -3,15 +3,20 @@
     <div class="p-navbar-links">
       <div class="p-navbar-links-left">
         <router-link to="/">
-          <v-fa class="p-bookIcon" icon="book" />
+          <v-fa
+            v-if="hasAuthority && isLogined"
+            class="p-bookIcon"
+            icon="book-open"
+          />
+          <v-fa v-else class="p-bookIcon" icon="book" />
         </router-link>
         <span class="p-headerLabel" v-if="currentUserName !== ''"
           >こんにちは、{{ currentUserName }}さん</span
         >
         <span class="p-headerLabel" v-else>BookManager</span>
       </div>
-      <div class="p-navbar-links-right">
-        <slide right noOverlay width="250" v-if="isBurgerShow && isLogined">
+      <div class="p-navbar-links-right" v-if="isLogined && hasAuthority">
+        <slide right noOverlay width="250" v-if="isBurgerShow">
           <router-link class="p-link" to="/bookRegistration"
             >書籍登録</router-link
           >
@@ -23,7 +28,7 @@
             >ログアウト</router-link
           >
         </slide>
-        <div v-else-if="isLogined">
+        <div v-else>
           <router-link class="p-link" to="/bookRegistration"
             >書籍登録</router-link
           >
@@ -79,6 +84,11 @@ export default {
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.resizeHandler)
+  },
+  computed: {
+    hasAuthority () {
+      return this.$route.path !== '/noAuthority'
+    }
   }
 }
 </script>
@@ -138,9 +148,12 @@ export default {
 
 .p-link {
   color: white;
-  text-decoration: none;
   display: inline-block;
   margin: 0.7em 1em;
+}
+
+a:hover {
+  text-decoration: none;
 }
 
 @media screen and (max-width: 350px) {

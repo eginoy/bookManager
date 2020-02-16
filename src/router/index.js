@@ -4,6 +4,7 @@ import BooksList from '../components/BooksList'
 import BookRegister from '../components/BookRegister'
 import Login from '../components/Login'
 import Logout from '../components/Logout'
+import NoAuthority from '../components/NoAuthority'
 
 import firebase from 'firebase/app'
 import 'firebase/database'
@@ -16,56 +17,103 @@ const router = new VueRouter({
   routes: [
     {
       path: '/',
-      component: BooksList
+      component: BooksList,
+      beforeEnter: (to, from, next) => {
+        firebase.auth().onAuthStateChanged(user => {
+          const reg = new RegExp('.*@monoworks.co.jp$')
+          if (user === null) return next({ path: '/login' })
+          if (reg.test(user.email)) {
+            next()
+          } else {
+            next({
+              path: '/noAuthority'
+            })
+          }
+        })
+      }
     },
     {
       path: '/books',
-      component: BooksList
+      component: BooksList,
+      beforeEnter: (to, from, next) => {
+        firebase.auth().onAuthStateChanged(user => {
+          const reg = new RegExp('.*@monoworks.co.jp$')
+          if (user === null) return next({ path: '/login' })
+          if (reg.test(user.email)) {
+            next()
+          } else {
+            next({
+              path: '/noAuthority'
+            })
+          }
+        })
+      }
     },
     {
       path: '/bookRegistration',
-      component: BookRegister
+      component: BookRegister,
+      beforeEnter: (to, from, next) => {
+        firebase.auth().onAuthStateChanged(user => {
+          const reg = new RegExp('.*@monoworks.co.jp$')
+          if (user === null) return next({ path: '/login' })
+          if (reg.test(user.email)) {
+            next()
+          } else {
+            next({
+              path: '/noAuthority'
+            })
+          }
+        })
+      }
+    },
+    {
+      path: '/noAuthority',
+      component: NoAuthority,
+      beforeEnter: (to, from, next) => {
+        firebase.auth().onAuthStateChanged(user => {
+          if (user === null) return next({ path: '/login' })
+          next()
+        })
+      }
     },
     {
       path: '/login',
       component: Login,
-      meta: {
-        isPublic: true
+      beforeEnter: (to, from, next) => {
+        firebase.auth().onAuthStateChanged(user => {
+          if (user !== null) return next({ path: '/books' })
+          next()
+        })
       }
     },
     {
       path: '/logout',
       component: Logout,
-      meta: {
-        isPublic: true
+      beforeEnter: (to, from, next) => {
+        firebase.auth().onAuthStateChanged(user => {
+          if (user === null) return next({ path: '/login' })
+          next()
+        })
       }
     },
     {
       path: '*',
-      component: BooksList
-    }
-  ]
-})
-
-router.beforeResolve(function (to, from, next) {
-  firebase.auth().onAuthStateChanged(function (user) {
-    if (to.matched.some(rec => rec.meta.isPublic)) {
-      // ・ログインしていない状態でログアウト
-      // ・ログインしている状態でログイン
-      // 場合のバリデーション
-      if (to.path === '/login' && user) next({ path: '/' })
-      if (to.path === '/logOut' && !user) next({ path: '/' })
-      next()
-    } else {
-      if (user) {
-        next()
-      } else {
-        next({
-          path: '/login'
+      component: BooksList,
+      beforeEnter: (to, from, next) => {
+        firebase.auth().onAuthStateChanged(user => {
+          const reg = new RegExp('.*@monoworks.co.jp$')
+          if (user === null) return next({ path: '/login' })
+          if (reg.test(user.email)) {
+            next()
+          } else {
+            next({
+              path: '/noAuthority'
+            })
+          }
         })
       }
     }
-  })
+  ]
 })
 
 export default router

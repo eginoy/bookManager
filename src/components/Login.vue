@@ -50,11 +50,15 @@ export default {
         })
     }
   },
-  created () {}
+  beforeCreate () {
+    if (firebase.auth().currentUser !== null) {
+      this.$router.push({ path: '/books' })
+    }
+  }
 }
 </script>
 
-<style>
+<style scoped>
 .p-pageWrapper {
   display: flex;
   flex-direction: column;
