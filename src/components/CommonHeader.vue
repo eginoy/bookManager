@@ -109,11 +109,11 @@ export default {
 }
 
 .bm-menu {
-  background-color: #007bff;
+  background-color: #007bff !important;
 }
 
 .bm-cross {
-  background: white;
+  background: white !important;
 }
 
 .bm-cross-button {
@@ -121,12 +121,12 @@ export default {
 }
 
 .bm-burger-button {
-  top: 8px;
+  top: 8px !important;
   right: 17px !important;
 }
 
 .bm-burger-bars {
-  background-color: white;
+  background-color: white !important;
 }
 
 .p-headerLabel {

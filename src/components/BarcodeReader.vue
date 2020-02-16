@@ -22,7 +22,7 @@
         class="form-control"
         v-model="code"
         type="text"
-        placeholder="上段バーコードのISBNコードを入力"
+        placeholder="上段バーコードのISBN入力"
       />
       <div class="input-group-append">
         <input
@@ -178,8 +178,14 @@ p {
 }
 
 .p-isbnSearchInputGroup {
-  max-width: 70%;
+  max-width: 20em;
   margin: 1em auto;
+}
+
+@media screen and (max-width: 350px) {
+  .p-isbnSearchInputGroup {
+    max-width: 90%;
+  }
 }
 
 .p-scanButton {
