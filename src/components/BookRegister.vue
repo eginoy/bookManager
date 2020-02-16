@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="p-pageWrapper">
     <div v-if="books.length">
       <Books
         v-for="book in books"
@@ -29,7 +29,8 @@
 
 <script>
 import $ from 'jquery'
-import firebase from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/database'
 import moment from 'moment'
 import convert from 'xml-js'
 
@@ -283,7 +284,9 @@ export default {
       return '登録'
     },
     isEmptyResult: function () {
-      if (this.books.length === 0 && this.isSearched && !this.isScanNow) { return true }
+      if (this.books.length === 0 && this.isSearched && !this.isScanNow) {
+        return true
+      }
       return false
     }
   }
@@ -291,6 +294,9 @@ export default {
 </script>
 
 <style scoped>
+.p-pageWrapper {
+  text-align: center;
+}
 .p-notFound {
   margin-top: 1em;
 }
