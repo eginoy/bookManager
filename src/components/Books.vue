@@ -63,7 +63,7 @@ export default {
 
 .p-bookInfo-detail-title {
   margin-bottom: 1em;
-  overflow: scroll;
+  overflow-y: auto;
 }
 .p-bookInfo-detail-link {
   text-decoration: none;
