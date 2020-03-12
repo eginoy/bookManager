@@ -1,6 +1,17 @@
 .DS_Store
 node_modules
 
+#firebase関連
+.firebase
+.firebaserc
+.firebase.json
+
+#apiの返り値サンプル
+JapanLibraryNoResult.json
+responseExmple.json
+responseExmpleJapanLibrary.json
+
+
 # local env files
 .env.local
 .env.*.local
