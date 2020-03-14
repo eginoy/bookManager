@@ -4,7 +4,7 @@
       class="c-books"
       v-for="book in books"
       :book="book"
-      :key="book.bookIsbnCode10"
+      :key="book.bookLink"
     ></Books>
   </div>
 </template>
