@@ -17,9 +17,7 @@
       </div>
       <div class="p-navbar-links-right" v-if="isLogined && hasAuthority">
         <slide right noOverlay width="250" v-if="isBurgerShow">
-          <router-link class="p-link" to="/bookRegistration"
-            >書籍登録</router-link
-          >
+          <router-link class="p-link" to="/bookRegist">書籍登録</router-link>
           <router-link class="p-link" to="/books">書籍一覧</router-link>
           <router-link v-if="!isLogined" class="p-link" to="/login"
             >ログイン</router-link
@@ -29,9 +27,7 @@
           >
         </slide>
         <div v-else>
-          <router-link class="p-link" to="/bookRegistration"
-            >書籍登録</router-link
-          >
+          <router-link class="p-link" to="/bookRegist">書籍登録</router-link>
           <router-link class="p-link" to="/books">書籍一覧</router-link>
           <router-link v-if="!isLogined" class="p-link" to="/login"
             >ログイン</router-link
