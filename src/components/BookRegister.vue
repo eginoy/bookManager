@@ -145,27 +145,6 @@ export default {
       const self = this
       var items
 
-      function setBookData (isbn, bookTitle, bookImage, publishedDate) {
-        if (self.bookTitle === '') self.bookTitle = bookTitle
-        if (self.bookImage === '') self.bookImage = bookImage
-
-        if (self.bookIsbnCode10 === 0 && isbn.length === 10) {
-          self.bookIsbnCode10 = isbn
-        }
-
-        if (self.bookIsbnCode13 === 0 && isbn.length === 13) {
-          self.bookIsbnCode13 = isbn
-        }
-
-        if (self.bookLink === '') {
-          self.bookLink = `https://www.amazon.co.jp/s?k=${isbn}&__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&ref=nb_sb_noss`
-        }
-
-        if (self.publishedDate === '') {
-          self.publishedDate = moment(publishedDate).format('YYYY-MM-DD')
-        }
-      }
-
       switch (id) {
         case 1:
           // 国立図書館
@@ -177,12 +156,16 @@ export default {
             result.elements[0].elements[4].elements[0].elements[2].elements[0]
               .elements[0].elements[0].text
 
-          setBookData(isbn, title, '', '')
+          self.setBookData(isbn, title, '', '')
           break
         case 2:
           // Google Books API
           items = result.items[0].volumeInfo
-          setBookData(
+          if (items.imageLinks === undefined) {
+            items.imageLinks = {}
+            items.imageLinks.smallThumbnail = ''
+          }
+          self.setBookData(
             isbn,
             items.title,
             items.imageLinks.smallThumbnail,
@@ -192,7 +175,7 @@ export default {
         case 3:
           // OpenBD
           items = result[0].summary
-          setBookData(isbn, items.title, items.cover, items.pubdate)
+          self.setBookData(isbn, items.title, items.cover, items.pubdate)
           break
       }
 
@@ -261,6 +244,27 @@ export default {
             self.isDuplicateBook = true
           }
         })
+    },
+    setBookData: function (isbn, bookTitle, bookImage, publishedDate) {
+      const self = this
+      if (self.bookTitle === '') self.bookTitle = bookTitle
+      if (self.bookImage === '') self.bookImage = bookImage
+
+      if (self.bookIsbnCode10 === 0 && isbn.length === 10) {
+        self.bookIsbnCode10 = isbn
+      }
+
+      if (self.bookIsbnCode13 === 0 && isbn.length === 13) {
+        self.bookIsbnCode13 = isbn
+      }
+
+      if (self.bookLink === '') {
+        self.bookLink = `https://www.amazon.co.jp/s?k=${isbn}&__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&ref=nb_sb_noss`
+      }
+
+      if (self.publishedDate === '') {
+        self.publishedDate = moment(publishedDate).format('YYYY-MM-DD')
+      }
     },
     resetBookData: function () {
       this.books = []
