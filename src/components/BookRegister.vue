@@ -161,9 +161,9 @@ export default {
         case 2:
           // Google Books API
           items = result.items[0].volumeInfo
+          // 書影が存在しない場合にレスポンス結果のプロパティが変化する。
           if (items.imageLinks === undefined) {
-            items.imageLinks = {}
-            items.imageLinks.smallThumbnail = ''
+            items.imageLinks = { smallThumbnail: '' }
           }
           self.setBookData(
             isbn,
