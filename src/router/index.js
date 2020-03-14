@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import BooksList from '../components/BooksList'
-import BookRegister from '../components/BookRegister'
+import bookRegist from '../pages/bookRegist'
 import Login from '../components/Login'
 import Logout from '../components/Logout'
 import NoAuthority from '../components/NoAuthority'
@@ -50,8 +50,8 @@ const router = new VueRouter({
       }
     },
     {
-      path: '/bookRegistration',
-      component: BookRegister,
+      path: '/bookRegist',
+      component: bookRegist,
       beforeEnter: (to, from, next) => {
         firebase.auth().onAuthStateChanged(user => {
           const reg = new RegExp('.*@monoworks.co.jp$')
