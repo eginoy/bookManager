@@ -309,7 +309,7 @@ export default {
 }
 
 .c-book {
-  width: 20em;
+  width: 300px;
   margin: 1em auto 0 auto;
   display: flex;
   flex-direction: column;
