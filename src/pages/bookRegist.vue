@@ -1,21 +1,24 @@
 <template>
   <div class="p-pageWrapper">
-    <div v-if="books.length">
-      <Books
-        v-for="book in books"
-        :book="book"
-        :key="book.bookIsbnCode10"
-      ></Books>
-      <button
-        v-if="!isDuplicateBook"
-        v-bind:disabled="isRegisterd"
-        class="p-bookInfo-registerButton btn btn-primary"
-        v-on:click="registerBookInfo"
-      >
-        <span>{{ buttonMessage }}</span>
-      </button>
-      <div v-else>
-        <span>登録済みの書籍です。</span>
+    <div v-show="books.length">
+      <div class="c-book">
+        <Books
+          v-for="book in books"
+          :book="book"
+          :key="book.bookIsbnCode10"
+        ></Books>
+
+        <button
+          v-if="!isDuplicateBook"
+          v-bind:disabled="isRegisterd"
+          class="p-bookInfo-registerButton btn btn-primary"
+          v-on:click="registerBookInfo"
+        >
+          <span>{{ buttonMessage }}</span>
+        </button>
+        <div v-else>
+          <span>登録済みの書籍です。</span>
+        </div>
       </div>
     </div>
     <div v-if="isEmptyResult">
@@ -23,7 +26,9 @@
         <span>検索結果:0件</span>
       </div>
     </div>
-    <BarcodeReader />
+    <div class="c-barcodeReader">
+      <BarcodeReader />
+    </div>
   </div>
 </template>
 
@@ -34,8 +39,8 @@ import 'firebase/database'
 import moment from 'moment'
 import convert from 'xml-js'
 
-import Books from './Books'
-import BarcodeReader from './BarcodeReader'
+import Books from '../components/Books'
+import BarcodeReader from '../components/BarcodeReader'
 
 export default {
   components: {
@@ -161,9 +166,9 @@ export default {
         case 2:
           // Google Books API
           items = result.items[0].volumeInfo
+          // 書影が存在しない場合にレスポンス結果のプロパティが変化する。
           if (items.imageLinks === undefined) {
-            items.imageLinks = {}
-            items.imageLinks.smallThumbnail = ''
+            items.imageLinks = { smallThumbnail: '' }
           }
           self.setBookData(
             isbn,
@@ -299,9 +304,24 @@ export default {
 
 <style scoped>
 .p-pageWrapper {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
 }
-.p-notFound {
-  margin-top: 1em;
+
+.c-book {
+  width: 300px;
+  margin: 1em auto 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.p-bookInfo-registerButton {
+  width: 5em;
+  margin: 0.5em auto;
+}
+
+.c-barcodeReader {
+  width: 20em;
+  margin: 1em auto;
 }
 </style>

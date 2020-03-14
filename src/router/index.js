@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import BooksList from '../components/BooksList'
-import BookRegister from '../components/BookRegister'
+import booksList from '../pages/booksList'
+import bookRegist from '../pages/bookRegist'
 import Login from '../components/Login'
 import Logout from '../components/Logout'
-import NoAuthority from '../components/NoAuthority'
+import noAuthority from '../pages/noAuthority'
 
 import firebase from 'firebase/app'
 import 'firebase/database'
@@ -17,7 +17,7 @@ const router = new VueRouter({
   routes: [
     {
       path: '/',
-      component: BooksList,
+      component: booksList,
       beforeEnter: (to, from, next) => {
         firebase.auth().onAuthStateChanged(user => {
           const reg = new RegExp('.*@monoworks.co.jp$')
@@ -34,7 +34,7 @@ const router = new VueRouter({
     },
     {
       path: '/books',
-      component: BooksList,
+      component: booksList,
       beforeEnter: (to, from, next) => {
         firebase.auth().onAuthStateChanged(user => {
           const reg = new RegExp('.*@monoworks.co.jp$')
@@ -50,8 +50,8 @@ const router = new VueRouter({
       }
     },
     {
-      path: '/bookRegistration',
-      component: BookRegister,
+      path: '/bookRegist',
+      component: bookRegist,
       beforeEnter: (to, from, next) => {
         firebase.auth().onAuthStateChanged(user => {
           const reg = new RegExp('.*@monoworks.co.jp$')
@@ -68,7 +68,7 @@ const router = new VueRouter({
     },
     {
       path: '/noAuthority',
-      component: NoAuthority,
+      component: noAuthority,
       beforeEnter: (to, from, next) => {
         firebase.auth().onAuthStateChanged(user => {
           if (user === null) return next({ path: '/login' })
@@ -98,7 +98,7 @@ const router = new VueRouter({
     },
     {
       path: '*',
-      component: BooksList,
+      component: booksList,
       beforeEnter: (to, from, next) => {
         firebase.auth().onAuthStateChanged(user => {
           const reg = new RegExp('.*@monoworks.co.jp$')

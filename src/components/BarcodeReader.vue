@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="p-scanWrapper" v-show="isScan"></div>
-    <section>
+    <section class="p-scanButtonWrapper">
       <button
         v-if="!isScan"
         class="p-scanButton btn btn-primary"
@@ -171,24 +171,31 @@ p {
   box-sizing: border-box;
 }
 
+.p-scanButtonWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.p-scanButton {
+  width: 10em;
+}
+
 .p-scanDescription {
   display: flex;
   justify-content: space-around;
   flex-direction: column;
+  width: 8em;
 }
 
 .p-isbnSearchInputGroup {
   max-width: 20em;
-  margin: 1em auto;
+  margin: 0 auto;
 }
 
 @media screen and (max-width: 350px) {
   .p-isbnSearchInputGroup {
     max-width: 90%;
   }
-}
-
-.p-scanButton {
-  margin-top: 2em;
 }
 </style>
