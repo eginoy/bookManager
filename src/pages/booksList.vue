@@ -33,7 +33,7 @@ export default {
       self.books = snapshot.val()
     })
   },
-  updated () {
+  mounted () {
     this.$nextTick(function () {
       // レスポンシブ時に書籍情報のレイアウトが中央揃えになるように空の要素を生成してる。
       var $books = $('.p-booksWrapper')
