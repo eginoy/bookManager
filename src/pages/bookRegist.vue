@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="c-barcodeReader">
-      <BarcodeReader />
+      <BookSearch />
     </div>
   </div>
 </template>
@@ -40,12 +40,12 @@ import moment from 'moment'
 import convert from 'xml-js'
 
 import Books from '../components/Books'
-import BarcodeReader from '../components/BarcodeReader'
+import BookSearch from '../components/BookSearch'
 
 export default {
   components: {
     Books,
-    BarcodeReader
+    BookSearch
   },
   data () {
     return {
