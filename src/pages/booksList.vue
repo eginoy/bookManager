@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
 import firebase from 'firebase/app'
 import 'firebase/database'
 import $ from 'jquery'
@@ -20,9 +21,7 @@ export default {
     Books
   },
   data () {
-    return {
-      books: []
-    }
+    return {}
   },
   created: function () {
     const self = this
@@ -30,7 +29,7 @@ export default {
     var db = firebase.database()
     var ref = db.ref('server/saving-data/books').orderByChild('publishedDate')
     ref.on('value', function (snapshot) {
-      self.books = snapshot.val()
+      self.SetBooks(snapshot.val())
     })
   },
   mounted () {
@@ -43,6 +42,12 @@ export default {
       }
       $books.append(emptyBookInfo)
     })
+  },
+  methods: {
+    ...mapMutations(['SetBooks'])
+  },
+  computed: {
+    ...mapState(['books'])
   }
 }
 </script>
