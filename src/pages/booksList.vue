@@ -53,14 +53,10 @@ export default {
         emptyBookInfo.push($('<div>', { class: 'p-bookInfo__empty' }))
       }
       $books.append(emptyBookInfo)
-<<<<<<< Updated upstream
-    })
-=======
     }
   },
   computed: {
     ...mapState(['books'])
->>>>>>> Stashed changes
   }
 }
 </script>
