@@ -39,18 +39,18 @@
 <script>
 import Quagga from 'quagga'
 import $ from '../../node_modules/jquery'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   data () {
     return {
       code: null,
-      isScan: false,
-      isSearched: false,
       width: 0,
       height: 0
     }
   },
   methods: {
+    ...mapMutations(['SetIsScan', 'SetIsSearched', 'SetCode']),
     startScan: function () {
       const self = this
       self.$eventHub.$emit('scan-start')
@@ -64,7 +64,7 @@ export default {
               facingMode: 'environment'
             },
             area: {
-              // 必要ならバーコードの読み取り範囲を調整できる（下50%は読み取りしない）
+              // 必要ならバーコードの読み取り範囲を調整できる（現在の設定だと下50%は読み取りしない）
               top: '0%',
               right: '0%',
               left: '0%',
@@ -88,7 +88,7 @@ export default {
           }
         }
       )
-      this.isScan = true
+      self.SetIsScan(true)
     },
     getEanCode: function () {
       const self = this
@@ -98,10 +98,11 @@ export default {
         if (self.checkDigit(readCode)) {
           self.code = readCode
           Quagga.stop()
-          self.isScan = false
-          self.isSearched = true
+          self.SetIsScan(false)
+          self.SetIsSearched(true)
           Quagga.stop()
           self.$eventHub.$emit('success-scan', self.code)
+          self.SetCode(readCode)
         } else {
           self.getEanCode()
         }
@@ -125,8 +126,10 @@ export default {
     },
     search: function () {
       // 開発時用の検索イベント発行
-      this.isSearched = true
+      //   this.isSearched = true
+      this.SetIsSearched(true)
       this.$eventHub.$emit('success-scan', this.code)
+      this.SetCode(this.code)
     }
   },
   updated () {
@@ -152,6 +155,17 @@ export default {
       $('.drawingBuffer').css({
         position: 'absolute'
       })
+    }
+  },
+  computed: {
+    ...mapState(['isScan', 'isSearched'])
+  },
+  code: {
+    get () {
+      return this.$store.state.code
+    },
+    set (val) {
+      this.SetCode(val)
     }
   }
 }

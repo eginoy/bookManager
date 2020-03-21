@@ -17,7 +17,7 @@
           <span>{{ buttonMessage }}</span>
         </button>
         <div v-else>
-          <span>登録済みの書籍です。</span>
+          <span class="p-registerdMessage">登録済みの書籍です。</span>
         </div>
       </div>
     </div>
@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
 import $ from 'jquery'
 import firebase from 'firebase/app'
 import 'firebase/database'
@@ -56,20 +57,21 @@ export default {
       bookIsbnCode13: 0,
       bookLink: '',
       publishedDate: '',
+      isScanNow: false,
       isDuplicateBook: false,
       isRegisterd: false,
-      isSearched: false,
-      isScanNow: false,
       inquiryCount: 0
     }
   },
   methods: {
-    getBookInfo: function (isbn) {
+    ...mapMutations(['SetBookInfo', 'SetIsSearched']),
+    getBookInfo: function () {
       const self = this
+      var isbn = self.code
       self.isDuplicateBook = false
       self.isRegisterd = false
       self.checkDuplicateBook(isbn)
-      self.isSearched = true
+      self.SetIsSearched(true)
       self.inquiryCount = 0
       self.resetBookData()
 
@@ -212,7 +214,7 @@ export default {
           }
         ]
       }
-      self.isSearched = true
+      self.SetIsSearched(true)
       if (self.books[0].bookTitle === '') self.resetBookData()
     },
     registerBookInfo: function () {
@@ -284,10 +286,16 @@ export default {
   },
   created: function () {
     // バーコード読み込み時のスキャン完了イベントを待機するようセット
-    this.$eventHub.$on('success-scan', this.getBookInfo)
-    this.$eventHub.$on('scan-start', this.resetBookData)
+    // this.$eventHub.$on('success-scan', this.getBookInfo)
+    // this.$eventHub.$on('scan-start', this.resetBookData)
+  },
+  watch: {
+    isSearched: function () {
+      this.getBookInfo()
+    }
   },
   computed: {
+    ...mapState(['isSearched', 'isScan', 'code']),
     buttonMessage: function () {
       if (this.isRegisterd) return '登録済み'
       return '登録'
@@ -313,6 +321,12 @@ export default {
   margin: 1em auto 0 auto;
   display: flex;
   flex-direction: column;
+}
+
+.p-registerdMessage {
+  display: flex;
+  justify-content: center;
+  margin: 0.5em 0;
 }
 
 .p-bookInfo-registerButton {
