@@ -35,14 +35,32 @@ export default {
   },
   mounted () {
     this.$nextTick(function () {
-      // レスポンシブ時に書籍情報のレイアウトが中央揃えになるように空の要素を生成してる。
+      this.createEmptyElement()
+    })
+  },
+  updated () {
+    this.$nextTick(function () {
+      this.createEmptyElement()
+    })
+  },
+  methods: {
+    ...mapMutations(['SetBooks']),
+    createEmptyElement () {
+      // flexboxで可変の要素数のときに(書籍情報)レイアウトが中央揃えになるように空の要素を生成してる。
       var $books = $('.p-booksWrapper')
       var emptyBookInfo = []
       for (var i = 0; i < $books.find('.p-bookInfo').length; i++) {
         emptyBookInfo.push($('<div>', { class: 'p-bookInfo__empty' }))
       }
       $books.append(emptyBookInfo)
+<<<<<<< Updated upstream
     })
+=======
+    }
+  },
+  computed: {
+    ...mapState(['books'])
+>>>>>>> Stashed changes
   }
 }
 </script>
