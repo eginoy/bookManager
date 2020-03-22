@@ -17,7 +17,7 @@
           <span>{{ buttonMessage }}</span>
         </button>
         <div v-else>
-          <span>登録済みの書籍です。</span>
+          <span class="p-registeredMessage">登録済みの書籍です。</span>
         </div>
       </div>
     </div>
@@ -313,6 +313,12 @@ export default {
   margin: 1em auto 0 auto;
   display: flex;
   flex-direction: column;
+}
+
+.p-registeredMessage {
+  display: flex;
+  justify-content: center;
+  margin: 0.5em 0em;
 }
 
 .p-bookInfo-registerButton {
