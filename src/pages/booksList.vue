@@ -24,6 +24,7 @@ export default {
     return {}
   },
   methods: {
+    ...mapMutations(['SetBooks']),
     createEmptyElement () {
       // flexレイアウトで書籍情報のレイアウトが中央揃えになるように空の要素を生成してる。
       var $books = $('.p-booksWrapper')
@@ -52,9 +53,6 @@ export default {
     this.$nextTick(function () {
       this.createEmptyElement()
     })
-  },
-  methods: {
-    ...mapMutations(['SetBooks'])
   },
   computed: {
     ...mapState(['books'])
