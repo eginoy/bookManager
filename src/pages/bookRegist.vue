@@ -17,7 +17,11 @@
           <span>{{ buttonMessage }}</span>
         </button>
         <div v-else>
+          <<<<<<< HEAD
           <span class="p-registerdMessage">登録済みの書籍です。</span>
+          =======
+          <span class="p-registeredMessage">登録済みの書籍です。</span>
+          >>>>>>> hotfix_書籍登録画面レイアウト崩れの修正
         </div>
       </div>
     </div>
@@ -323,10 +327,10 @@ export default {
   flex-direction: column;
 }
 
-.p-registerdMessage {
+.p-registeredMessage {
   display: flex;
   justify-content: center;
-  margin: 0.5em 0;
+  margin: 0.5em 0em;
 }
 
 .p-bookInfo-registerButton {
