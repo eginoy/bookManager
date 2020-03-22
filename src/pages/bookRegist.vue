@@ -1,6 +1,6 @@
 <template>
   <div class="p-pageWrapper">
-    <div v-show="books.length">
+    <div v-if="books.length">
       <div class="c-book">
         <Books
           v-for="book in books"
@@ -21,8 +21,8 @@
         </div>
       </div>
     </div>
-    <div v-if="isEmptyResult">
-      <div class="p-notFound">
+    <div v-else-if="isSearched">
+      <div class="p-notFoundMessage">
         <span>検索結果:0件</span>
       </div>
     </div>
@@ -198,20 +198,6 @@ export default {
       }
 
       if (self.bookIsbnCode10 !== 0 || self.bookIsbnCode13 !== 0) {
-        // self.books = [
-        //   {
-        //     bookTitle: self.bookTitle,
-        //     bookImage:
-        //       self.bookImage === ''
-        //         ? 'http://placehold.jp/24/cccccc/ffffff/128x165.png?text=Image%0D%0ANotFound'
-        //         : self.bookImage,
-        //     bookIsbnCode10: self.bookIsbnCode10,
-        //     bookIsbnCode13: self.bookIsbnCode13,
-        //     bookLink: self.bookLink,
-        //     publishedDate: self.publishedDate,
-        //     insertDate: moment(new Date()).format('YYYY/MM/DD')
-        //   }
-        // ]
         self.SetBooks([
           {
             bookTitle: self.bookTitle,
@@ -352,6 +338,12 @@ export default {
   flex-direction: column;
 }
 
+.p-notFoundMessage {
+  display: flex;
+  justify-content: center;
+  margin: 0.5em 0;
+}
+
 .p-registeredMessage {
   display: flex;
   justify-content: center;
@@ -365,6 +357,6 @@ export default {
 
 .c-barcodeReader {
   width: 20em;
-  margin: 1em auto;
+  margin: 0.5em auto 0 auto;
 }
 </style>
