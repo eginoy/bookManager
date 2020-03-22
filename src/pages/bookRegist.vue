@@ -288,6 +288,11 @@ export default {
     // this.$eventHub.$on('success-scan', this.getBookInfo)
     // this.$eventHub.$on('scan-start', this.resetBookData)
   },
+  beforeDestroy () {
+    this.$nextTick(function () {
+      this.SetIsSearched(false)
+    })
+  },
   watch: {
     code () {
       this.getBookInfo()
