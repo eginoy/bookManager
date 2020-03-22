@@ -50,7 +50,6 @@ export default {
   },
   data () {
     return {
-      books: [],
       bookTitle: '',
       bookImage: '',
       bookIsbnCode10: 0,
@@ -64,7 +63,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SetBook', 'SetIsSearched']),
+    ...mapMutations(['SetBooks', 'SetIsSearched']),
     getBookInfo: function () {
       const self = this
       var isbn = self.code
@@ -199,7 +198,21 @@ export default {
       }
 
       if (self.bookIsbnCode10 !== 0 || self.bookIsbnCode13 !== 0) {
-        self.books = [
+        // self.books = [
+        //   {
+        //     bookTitle: self.bookTitle,
+        //     bookImage:
+        //       self.bookImage === ''
+        //         ? 'http://placehold.jp/24/cccccc/ffffff/128x165.png?text=Image%0D%0ANotFound'
+        //         : self.bookImage,
+        //     bookIsbnCode10: self.bookIsbnCode10,
+        //     bookIsbnCode13: self.bookIsbnCode13,
+        //     bookLink: self.bookLink,
+        //     publishedDate: self.publishedDate,
+        //     insertDate: moment(new Date()).format('YYYY/MM/DD')
+        //   }
+        // ]
+        self.SetBooks([
           {
             bookTitle: self.bookTitle,
             bookImage:
@@ -212,7 +225,7 @@ export default {
             publishedDate: self.publishedDate,
             insertDate: moment(new Date()).format('YYYY/MM/DD')
           }
-        ]
+        ])
       }
       self.SetIsSearched(true)
       if (self.books[0].bookTitle === '') self.resetBookData()
@@ -290,12 +303,28 @@ export default {
     // this.$eventHub.$on('scan-start', this.resetBookData)
   },
   watch: {
-    isSearched: function () {
+    code () {
       this.getBookInfo()
     }
   },
   computed: {
-    ...mapState(['isSearched', 'isScan', 'code']),
+    ...mapState(['books', 'isScan', 'code']),
+    books: {
+      get () {
+        return this.$store.state.books
+      },
+      set (val) {
+        this.SetBooks(val)
+      }
+    },
+    isSearched: {
+      get () {
+        return this.$store.state.isSearched
+      },
+      set (val) {
+        this.SetIsSearched(val)
+      }
+    },
     buttonMessage: function () {
       if (this.isRegisterd) return '登録済み'
       return '登録'
