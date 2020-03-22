@@ -145,6 +145,10 @@ export default {
 
     $('body').css('width', this.w)
   },
+  destroyed () {
+    Quagga.stop()
+    this.SetIsScan(false)
+  },
   watch: {
     isScan: function () {
       $('video').css({
