@@ -7,7 +7,7 @@ export const state = {
 }
 
 export const mutations = {
-  SetBookInfo (state, payload) {
+  SetBook (state, payload) {
     state.book = payload
   },
   SetBooks (state, payload) {
