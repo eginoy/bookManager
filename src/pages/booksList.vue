@@ -24,6 +24,17 @@ export default {
       books: []
     }
   },
+  methods: {
+    createEmptyElement () {
+      // flexレイアウトで書籍情報のレイアウトが中央揃えになるように空の要素を生成してる。
+      var $books = $('.p-booksWrapper')
+      var emptyBookInfo = []
+      for (var i = 0; i < $books.find('.p-bookInfo').length; i++) {
+        emptyBookInfo.push($('<div>', { class: 'p-bookInfo__empty' }))
+      }
+      $books.append(emptyBookInfo)
+    }
+  },
   created: function () {
     const self = this
 
@@ -35,13 +46,12 @@ export default {
   },
   mounted () {
     this.$nextTick(function () {
-      // レスポンシブ時に書籍情報のレイアウトが中央揃えになるように空の要素を生成してる。
-      var $books = $('.p-booksWrapper')
-      var emptyBookInfo = []
-      for (var i = 0; i < $books.find('.p-bookInfo').length; i++) {
-        emptyBookInfo.push($('<div>', { class: 'p-bookInfo__empty' }))
-      }
-      $books.append(emptyBookInfo)
+      this.createEmptyElement()
+    })
+  },
+  updated () {
+    this.$nextTick(function () {
+      this.createEmptyElement()
     })
   }
 }
