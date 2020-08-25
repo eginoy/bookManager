@@ -18,7 +18,7 @@
     "core-js": "^3.4.4",
     "firebase": "^7.7.0",
     "firebase-tools": "^7.12.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "loadsh": "^0.0.4",
     "moment": "^2.24.0",
     "prettier-eslint": "^9.0.1",
