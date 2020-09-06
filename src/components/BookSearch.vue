@@ -50,9 +50,10 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SetIsScan', 'SetIsSearched', 'SetCode']),
+    ...mapMutations(['SetIsScan', 'SetIsSearched', 'SetCode', 'ResetBooks']),
     startScan: function () {
       const self = this
+      self.ResetBooks()
       self.$eventHub.$emit('scan-start')
       Quagga.init(
         {
@@ -127,8 +128,9 @@ export default {
     search: function () {
       // 開発時用の検索イベント発行
       //   this.isSearched = true
+      this.ResetBooks()
       this.SetIsSearched(true)
-      this.$eventHub.$emit('success-scan', this.code)
+      //   this.$eventHub.$emit('success-scan', this.code)
       this.SetCode(this.code)
     }
   },
@@ -142,6 +144,10 @@ export default {
     this.height = document.documentElement.clientHeight
 
     $('body').css('width', this.w)
+  },
+  destroyed () {
+    Quagga.stop()
+    this.SetIsScan(false)
   },
   watch: {
     isScan: function () {

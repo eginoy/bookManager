@@ -21,5 +21,8 @@ export const mutations = {
   },
   SetCode (state, payload) {
     state.code = payload
+  },
+  ResetBooks (state) {
+    state.books = []
   }
 }

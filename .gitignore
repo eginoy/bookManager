@@ -1,6 +1,9 @@
 .DS_Store
 node_modules
 
+#閲覧権限チェックkey
+.env
+
 #firebase関連
 .firebase
 .firebaserc
