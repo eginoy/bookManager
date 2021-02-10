@@ -17,11 +17,7 @@
           <span>{{ buttonMessage }}</span>
         </button>
         <div v-else>
-          <<<<<<< HEAD
-          <span class="p-registerdMessage">登録済みの書籍です。</span>
-          =======
           <span class="p-registeredMessage">登録済みの書籍です。</span>
-          >>>>>>> hotfix_書籍登録画面レイアウト崩れの修正
         </div>
       </div>
     </div>
