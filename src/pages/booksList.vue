@@ -32,7 +32,8 @@ export default {
         emptyBookInfo.push($('<div>', { class: 'p-bookInfo__empty' }))
       }
       $books.append(emptyBookInfo)
-    }
+    },
+    ...mapMutations(['SetBooks'])
   },
   created: function () {
     const self = this
@@ -52,9 +53,6 @@ export default {
     this.$nextTick(function () {
       this.createEmptyElement()
     })
-  },
-  methods: {
-    ...mapMutations(['SetBooks'])
   },
   computed: {
     ...mapState(['books'])
