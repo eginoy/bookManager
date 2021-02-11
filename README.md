@@ -1,9 +1,11 @@
 # book_manager
-Vue.jsを用いたWebアプリケーション作成練習の成果物。
+Vue.jsを用いたWebアプリケーション作成練習の成果物。  
+[demo](https://bookmanager-demo.firebaseapp.com/)
 
 バーコードからISBNコードを読み取り、GoogleBooks,国立図書館,OpenBDのapiから書籍情報を取得し登録、閲覧ができる。
 
 バックエンドはfirebaseを使用。
+
 
 ## Project setup
 ```
