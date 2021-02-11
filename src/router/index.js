@@ -20,9 +20,7 @@ const router = new VueRouter({
       component: booksList,
       beforeEnter: (to, from, next) => {
         firebase.auth().onAuthStateChanged(user => {
-          const reg = new RegExp('.*@monoworks.co.jp$')
-          if (user === null) return next({ path: '/login' })
-          if (reg.test(user.email)) {
+          if (user) {
             next()
           } else {
             next({
@@ -37,9 +35,7 @@ const router = new VueRouter({
       component: booksList,
       beforeEnter: (to, from, next) => {
         firebase.auth().onAuthStateChanged(user => {
-          const reg = new RegExp('.*@monoworks.co.jp$')
-          if (user === null) return next({ path: '/login' })
-          if (reg.test(user.email)) {
+          if (user) {
             next()
           } else {
             next({
@@ -54,9 +50,7 @@ const router = new VueRouter({
       component: bookRegist,
       beforeEnter: (to, from, next) => {
         firebase.auth().onAuthStateChanged(user => {
-          const reg = new RegExp('.*@monoworks.co.jp$')
-          if (user === null) return next({ path: '/login' })
-          if (reg.test(user.email)) {
+          if (user) {
             next()
           } else {
             next({
@@ -101,9 +95,7 @@ const router = new VueRouter({
       component: booksList,
       beforeEnter: (to, from, next) => {
         firebase.auth().onAuthStateChanged(user => {
-          const reg = new RegExp('.*@monoworks.co.jp$')
-          if (user === null) return next({ path: '/login' })
-          if (reg.test(user.email)) {
+          if (user) {
             next()
           } else {
             next({
