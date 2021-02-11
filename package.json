@@ -17,7 +17,7 @@
     "bootstrap-vue": "^2.2.2",
     "core-js": "^3.4.4",
     "firebase": "^8.2.6",
-    "firebase-tools": "^7.12.1",
+    "firebase-tools": "^9.3.0",
     "jquery": "^3.4.1",
     "loadsh": "^0.0.4",
     "moment": "^2.24.0",

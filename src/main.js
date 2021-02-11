@@ -6,7 +6,6 @@ import router from './router'
 import firebase from 'firebase/app'
 import 'firebase/database'
 import 'firebase/auth'
-import 'firebase/analytics'
 
 import { BootstrapVue, IconPlugin } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -31,18 +30,14 @@ Vue.use(router, BootstrapVue, IconPlugin)
 Vue.config.productionTip = false
 
 var firebaseConfig = {
-  apiKey: 'AIzaSyBqTUMBDPsd4Nl9sS7RrwPh3QaHhFyqjq4',
-  authDomain: 'bookmanager-5ba4c.firebaseapp.com',
-  databaseURL: 'https://bookmanager-5ba4c.firebaseio.com',
-  projectId: 'bookmanager-5ba4c',
-  storageBucket: 'bookmanager-5ba4c.appspot.com',
-  messagingSenderId: '991241456327',
-  appId: '1:991241456327:web:933a53fa86a3fa5e7f0ce2',
-  measurementId: 'G-PNHNDBKK49'
+  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+  authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.VUE_APP_FIREBASE_DATABASE_URL,
+  projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
+  appId: process.env.VUE_APP_FIREBASE_APP_ID
 }
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig)
-firebase.analytics()
 
 Vue.config.productionTip = false
 
